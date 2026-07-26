@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env pwsh
 # session-start hook for claude-code-zh-cn (Windows PowerShell 版本)
 # 1. 注入中文上下文指令
-# 2. 检测插件 Release 更新并同步安装态
-# 3. npm cli.js 可自动重 patch；Windows native 记录安全交接，避免改写正在运行的 exe
+# 2. 偵測外掛 Release 更新並同步安裝態
+# 3. npm cli.js 可自動重 patch；Windows native 記錄安全交接，避免改寫正在執行的 exe
 
 $ErrorActionPreference = "SilentlyContinue"
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
@@ -22,7 +22,7 @@ $StateRoot = if ($env:CLAUDE_PLUGIN_DATA) {
 }
 New-Item -Force -ItemType Directory -Path $StateRoot | Out-Null
 
-# Marketplace 插件目录按版本缓存，状态写入持久目录；首次加载迁移旧安装的本机状态。
+# Marketplace 外掛目錄按版本快取，狀態寫入持久目錄；首次載入遷移舊安裝的本機狀態。
 if ($env:CLAUDE_PLUGIN_DATA -and $StateRoot -ne $LegacyPluginRoot) {
     foreach ($stateName in @(".patched-version", ".settings-overlay-cache.json")) {
         $stateTarget = Join-Path $StateRoot $stateName
@@ -119,7 +119,7 @@ function Invoke-CommandWithTimeout {
         [int]$TimeoutSeconds
     )
 
-    # 始终交给当前 PowerShell 子进程执行，因此 native exe、npm 的 .ps1/.cmd shim 都可用。
+    # 始終交給目前 PowerShell 子程序執行，因此 native exe、npm 的 .ps1/.cmd shim 都可用。
     $tokens = @($FilePath) + @($Arguments) | ForEach-Object {
         "'" + ([string]$_).Replace("'", "''") + "'"
     }
@@ -379,13 +379,13 @@ function Invoke-NativePatch($Target) {
         $finalMarker | Out-File -FilePath $MarkerFile -Encoding ascii -NoNewline
 
         if ($mode -eq "provisional") {
-            return "（新版本已本机自验证，自动 patch ${patchCount} 处；未覆盖文案继续显示英文）"
+            return "（新版本已本機自驗證，自動 patch ${patchCount} 處；未覆蓋文案繼續顯示英文）"
         }
         if ($patchStatus -eq "partial") {
-            return "（已自动 patch ${patchCount} 处；未覆盖文案继续显示英文）"
+            return "（已自動 patch ${patchCount} 處；未覆蓋文案繼續顯示英文）"
         }
         if ($patchCount -gt 0) {
-            return "（已自动 patch ${patchCount} 处硬编码文字，启动自检通过）"
+            return "（已自動 patch ${patchCount} 處硬編碼文字，啟動自檢通過）"
         }
         return ""
     } finally {
@@ -422,7 +422,7 @@ if ($env:CLAUDE_PLUGIN_DATA -and $env:ZH_CN_DISABLE_AUTO_UPDATE -ne "1") {
                     $updateOutput = $pluginUpdateResult.Output
                     $updated = $true
                     if ($updateOutput -notmatch "already at the latest|latest version|已是最新") {
-                        $AutoUpdateMsg = "插件更新已由 Claude plugin manager 下载，将在下次会话生效"
+                        $AutoUpdateMsg = "外掛更新已由 Claude plugin manager 下載，將在下次工作階段生效"
                     }
                 }
             }
@@ -454,14 +454,14 @@ if ($SourceRepo -and (Test-Path "$SourceRepo\.git") -and $env:ZH_CN_DISABLE_AUTO
                 -FilePath "git" `
                 -Arguments @("-C", $SourceRepo, "fetch", "--tags", "--quiet") `
                 -TimeoutSeconds $PluginUpdateTimeoutSeconds
-            # 拉取超时仍可使用本地已有 tag；不会让 SessionStart 一直等待网络。
+            # 拉取逾時仍可使用本地已有 tag；不會讓 SessionStart 一直等待網路。
             $LatestTag = (git -C $SourceRepo tag -l 'v*' --sort=-version:refname 2>$null | Select-Object -First 1)
             $LatestVersion = $LatestTag -replace '^v', ''
             if ($LatestTag -and $LatestVersion -and $LocalVersion -match '^\d+\.\d+\.\d+' -and $LatestVersion -match '^\d+\.\d+\.\d+') {
                 if (Test-VersionIsNewer $LocalVersion $LatestVersion) {
                     "available v${LatestVersion} ${now}" | Out-File `
                         -FilePath (Join-Path $StateRoot ".last-update-status") -Encoding ascii -NoNewline
-                    $AutoUpdateMsg = "检测到插件 v${LatestVersion}（当前 v${LocalVersion}）。为避免会话启动途中覆盖插件，本次未自动安装；会话结束后在源码目录运行 git pull，再重跑 install.ps1"
+                    $AutoUpdateMsg = "偵測到外掛 v${LatestVersion}（目前 v${LocalVersion}）。為避免工作階段啟動途中覆蓋外掛，本次未自動安裝；工作階段結束後在原始碼目錄執行 git pull，再重跑 install.ps1"
                 }
             }
         }
@@ -479,8 +479,8 @@ if ($ClaudeBin) {
 if ($InstallInfo) {
     $Kind, $Target = $InstallInfo -split ':', 2
     if ($Kind -eq "native-bun" -and $Target -and (Test-Path $Target)) {
-        # Windows 会锁住正在运行的 claude.exe；SessionStart 现场写回必然失败，
-        # 因此这里只记录明确交接。关闭 Claude 后由 install.ps1 完成同一套自检与回滚事务。
+        # Windows 會鎖住正在執行的 claude.exe；SessionStart 現場寫回必然失敗，
+        # 因此這裡只記錄明確交接。關閉 Claude 後由 install.ps1 完成同一套自檢與回滾事務。
         $pendingVersion = Read-NativeVersion $Target
         $pendingPlatform = Get-NativePlatform
         $pendingMode = ""
@@ -515,11 +515,11 @@ if ($InstallInfo) {
                     reason = "running-executable-locked"
                     recordedAt = [DateTimeOffset]::Now.ToUnixTimeSeconds()
                 } | ConvertTo-Json -Compress | Out-File -FilePath $NativePatchPendingFile -Encoding utf8
-                $AutoPatchMsg = "（Windows 不改写正在运行的 claude.exe；本次保持原版可用。关闭所有 Claude Code 窗口后，按 https://github.com/taekchef/claude-code-zh-cn#windows-原生安装 重跑 install.ps1，即可安全补上仍能匹配的中文文案）"
+                $AutoPatchMsg = "（Windows 不改寫正在執行的 claude.exe；本次保持原版可用。關閉所有 Claude Code 視窗後，按 https://github.com/taekchef/claude-code-zh-cn#windows-原生安裝 重跑 install.ps1，即可安全補上仍能匹配的中文文案）"
             }
         } else {
             Remove-Item $NativePatchPendingFile -Force -ErrorAction SilentlyContinue
-            $AutoPatchMsg = "（Windows native 当前格式或版本无法进入本机自验证；本次不改写正在运行的 claude.exe，Layer 1~3 继续生效）"
+            $AutoPatchMsg = "（Windows native 目前格式或版本無法進入本機自驗證；本次不改寫正在執行的 claude.exe，Layer 1~3 繼續生效）"
         }
     } elseif ($Kind -eq "npm" -and $Target -and (Test-Path $Target)) {
         $CurrentVersion = Read-CliVersion $Target
@@ -533,7 +533,7 @@ if ($InstallInfo) {
         $hasResidue = Test-NpmCliResidue $Target
         if ($CurrentMarker -ne $PatchedVersion -or $hasResidue) {
             if (Test-Path "$PluginRoot\patch-cli.js") {
-                # 备份/恢复/语法校验/失败回滚统一由 patch-cli.js 托管（--backup 模式）
+                # 備份/恢復/語法校驗/失敗回滾統一由 patch-cli.js 託管（--backup 模式）
                 $statusFile = Join-Path ([System.IO.Path]::GetTempPath()) ("cczh-patch-status-" + [System.IO.Path]::GetRandomFileName())
                 $patchCount = node "$PluginRoot\patch-cli.js" "$Target" "$PluginRoot\cli-translations.json" --backup "$Target.zh-cn-backup" --status $statusFile 2>$null
                 $patchStatus = "error"
@@ -545,18 +545,18 @@ if ($InstallInfo) {
                     "ok" {
                         "$CurrentMarker" | Out-File -FilePath $MarkerFile -Encoding ascii -NoNewline
                         if ($patchCount -and [int]$patchCount -gt 0) {
-                            $AutoPatchMsg = "（已自动 patch ${patchCount} 处硬编码文字）"
+                            $AutoPatchMsg = "（已自動 patch ${patchCount} 處硬編碼文字）"
                         }
                     }
                     "noop" {
                         "$CurrentMarker" | Out-File -FilePath $MarkerFile -Encoding ascii -NoNewline
                     }
                     "partial" {
-                        # 部分降级：当前版本存在未覆盖文案，不更新 marker，等插件更新后重试
-                        $AutoPatchMsg = "（已自动 patch ${patchCount} 处；当前 Claude Code 版本存在未覆盖文案，部分界面保持英文，等待插件更新）"
+                        # 部分降級：目前版本存在未覆蓋文案，不更新 marker，等外掛更新後重試
+                        $AutoPatchMsg = "（已自動 patch ${patchCount} 處；目前 Claude Code 版本存在未覆蓋文案，部分介面保持英文，等待外掛更新）"
                     }
                     default {
-                        # validation-failed / error：未写盘，CLI 保持原样可用；详情见 patch.log
+                        # validation-failed / error：未寫盤，CLI 保持原樣可用；詳情見 patch.log
                     }
                 }
             }
@@ -577,38 +577,38 @@ $rawInput = [Console]::In.ReadToEnd()
 $ctxLines = @(
     "## 中文本地化提示",
     "",
-    "你正在使用中文本地化版本。请遵循以下规则：",
-    "- 默认使用中文（简体）回复用户",
-    "- 技术术语保留英文（如 API、PR、git、npm、React、TypeScript 等）",
-    "- 使用中文标点符号（，。！？：；「」）",
-    "- 错误信息尽量提供中文解释，附带英文原文",
-    "- 保持简洁直接的风格",
-    "- 代码注释使用中文",
+    "你正在使用中文本地化版本。請遵循以下規則：",
+    "- 預設使用繁體中文（台灣）回覆使用者",
+    "- 技術術語保留英文（如 API、PR、git、npm、React、TypeScript 等）",
+    "- 使用中文標點符號（，。！？：；「」）",
+    "- 錯誤資訊儘量提供中文解釋，附帶英文原文",
+    "- 保持簡潔直接的風格",
+    "- 程式碼註解使用中文",
     "- 日期格式使用 YYYY年MM月DD日",
     "",
-    "## 机器配置保护",
-    "- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、权限规则、环境变量或工具参数时，必须优先保证机器可执行。",
-    "- 保留 JSON key、枚举值、工具名、命令名、路径、环境变量名、subagent_type、slash command 和 shell 语法原文，不要翻译。",
-    "- 只翻译给用户看的解释文字；不要为了中文化改变配置、命令或工具调用语义。",
+    "## 機器配置保護",
+    "- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、權限規則、環境變數或工具參數時，必須優先保證機器可執行。",
+    "- 保留 JSON key、列舉值、工具名、命令名、路徑、環境變數名、subagent_type、slash command 和 shell 語法原文，不要翻譯。",
+    "- 只翻譯給使用者看的解釋文字；不要為了中文化改變配置、命令或工具呼叫語義。",
     "",
-    "## 常见错误信息翻译参考",
-    "- Permission denied → 权限被拒绝",
-    "- File not found → 文件未找到",
+    "## 常見錯誤資訊翻譯參考",
+    "- Permission denied → 權限被拒絕",
+    "- File not found → 檔案未找到",
     "- Command not found → 命令未找到",
-    "- Connection refused → 连接被拒绝",
-    "- Timeout → 超时",
-    "- Rate limited → 请求频率受限",
-    "- Internal server error → 服务器内部错误",
-    "- Unauthorized → 未授权",
-    "- Forbidden → 禁止访问",
+    "- Connection refused → 連線被拒絕",
+    "- Timeout → 逾時",
+    "- Rate limited → 請求頻率受限",
+    "- Internal server error → 伺服器內部錯誤",
+    "- Unauthorized → 未授權",
+    "- Forbidden → 禁止存取",
     "- Not found → 未找到"
 )
 
 if ($AutoUpdateMsg) {
-    $ctxLines += @("", "## 自动更新", $AutoUpdateMsg)
+    $ctxLines += @("", "## 自動更新", $AutoUpdateMsg)
 }
 if ($AutoPatchMsg) {
-    $ctxLines += @("", "## 自动修复", $AutoPatchMsg)
+    $ctxLines += @("", "## 自動修復", $AutoPatchMsg)
 }
 
 $result = @{

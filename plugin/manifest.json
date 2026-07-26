@@ -1,7 +1,7 @@
 {
   "name": "claude-code-zh-cn",
   "version": "2.6.1",
-  "description": "Claude Code 中文本地化插件 — 简体中文支持",
+  "description": "Claude Code 中文本地化外掛 — 繁體中文支援",
   "author": "taekchef",
   "license": "MIT",
   "hooks": "hooks.json",

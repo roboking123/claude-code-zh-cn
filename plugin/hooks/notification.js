@@ -5,12 +5,12 @@
 const fs = require("node:fs");
 
 const translations = [
-  ["Rate limited", "请求频率受限，请稍后再试"],
-  ["Token limit reached", "Token 用量已达上限"],
-  ["Session expired", "会话已过期"],
-  ["Context window", "上下文窗口即将用尽，建议使用 /compact 压缩"],
-  ["Usage limit", "使用额度已达上限"],
-  ["Auto-compact", "正在自动压缩对话历史..."],
+  ["Rate limited", "請求頻率受限，請稍後再試"],
+  ["Token limit reached", "Token 用量已達上限"],
+  ["Session expired", "工作階段已過期"],
+  ["Context window", "上下文視窗即將用盡，建議使用 /compact 壓縮"],
+  ["Usage limit", "使用額度已達上限"],
+  ["Auto-compact", "正在自動壓縮對話歷史..."],
 ];
 
 function main() {
@@ -29,7 +29,7 @@ function main() {
     `${JSON.stringify({
       hookSpecificOutput: {
         hookEventName: "Notification",
-        additionalContext: `通知翻译：${match[1]}`,
+        additionalContext: `通知翻譯：${match[1]}`,
       },
     })}\n`
   );

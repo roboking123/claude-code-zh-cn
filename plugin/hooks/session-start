@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # session-start hook for claude-code-zh-cn
 # 1. 注入中文上下文指令
-# 2. 检测插件 Release 更新并同步安装态
-# 3. 检测 Claude Code 版本变更，从同版本干净备份安全重 patch
+# 2. 偵測外掛 Release 更新並同步安裝態
+# 3. 偵測 Claude Code 版本變更，從同版本乾淨備份安全重 patch
 
 LEGACY_PLUGIN_ROOT="$HOME/.claude/plugins/claude-code-zh-cn"
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$LEGACY_PLUGIN_ROOT}"
 STATE_ROOT="${CLAUDE_PLUGIN_DATA:-${CLAUDE_PLUGIN_ROOT:-$LEGACY_PLUGIN_ROOT}}"
 mkdir -p "$STATE_ROOT" 2>/dev/null || STATE_ROOT="$PLUGIN_ROOT"
 
-# 正式 marketplace 插件的安装目录会随版本变化，运行状态必须放在持久目录。
-# 首次迁移只带走本机 patch/设置状态；插件更新交给 Claude plugin manager。
+# 正式 marketplace 外掛的安裝目錄會隨版本變化，執行狀態必須放在持久目錄。
+# 首次遷移只帶走本機 patch/設定狀態；外掛更新交給 Claude plugin manager。
 if [ -n "${CLAUDE_PLUGIN_DATA:-}" ] && [ "$STATE_ROOT" != "$LEGACY_PLUGIN_ROOT" ]; then
     for state_file in .patched-version .settings-overlay-cache.json; do
         if [ ! -f "$STATE_ROOT/$state_file" ] && [ -f "$LEGACY_PLUGIN_ROOT/$state_file" ]; then
@@ -598,13 +598,13 @@ update_official_marketplace_plugin() {
             ;;
         *)
             write_update_status "ok marketplace $(date +%s)"
-            AUTO_UPDATE_MSG="插件更新已由 Claude plugin manager 下载，将在下次会话生效"
+            AUTO_UPDATE_MSG="外掛更新已由 Claude plugin manager 下載，將在下次工作階段生效"
             ;;
     esac
 }
 
-# 自动更新：正式插件交给 Claude plugin manager；旧独立安装只检查并提示，
-# 不在 SessionStart 中途原地覆盖自身，避免安装被打断后留下半份文件。
+# 自動更新：正式外掛交給 Claude plugin manager；舊獨立安裝只檢查並提示，
+# 不在 SessionStart 中途原地覆蓋自身，避免安裝被打斷後留下半份檔案。
 AUTO_UPDATE_MSG=""
 if [ -n "${CLAUDE_PLUGIN_DATA:-}" ]; then
     if update_check_due; then
@@ -627,9 +627,9 @@ else
         && version_is_newer "$LOCAL_VERSION" "$LATEST_VERSION"; then
         write_update_status "available v${LATEST_VERSION} $(date +%s)"
         if is_local_source_repo "$SOURCE_REPO"; then
-            AUTO_UPDATE_MSG="检测到插件 v${LATEST_VERSION}（当前 v${LOCAL_VERSION}）。为避免会话启动途中覆盖插件，本次未自动安装；会话结束后在源码目录运行 git pull && ./install.sh"
+            AUTO_UPDATE_MSG="偵測到外掛 v${LATEST_VERSION}（目前 v${LOCAL_VERSION}）。為避免工作階段啟動途中覆蓋外掛，本次未自動安裝；工作階段結束後在原始碼目錄執行 git pull && ./install.sh"
         else
-            AUTO_UPDATE_MSG="检测到插件 v${LATEST_VERSION}（当前 v${LOCAL_VERSION}）。为避免会话启动途中覆盖插件，本次未自动安装；会话结束后重跑 README 中的远程安装命令"
+            AUTO_UPDATE_MSG="偵測到外掛 v${LATEST_VERSION}（目前 v${LOCAL_VERSION}）。為避免工作階段啟動途中覆蓋外掛，本次未自動安裝；工作階段結束後重跑 README 中的遠端安裝命令"
         fi
     else
         write_update_status "noop v${LOCAL_VERSION:-unknown} $(date +%s)"
@@ -637,7 +637,7 @@ else
     fi
 fi
 
-# 自动 patch 检测
+# 自動 patch 偵測
 INSTALL_INFO=""
 HELPER_AVAILABLE=false
 if [ -f "$PLUGIN_ROOT/bun-binary-io.js" ]; then
@@ -659,8 +659,8 @@ case "$INSTALL_KIND" in
         ;;
 esac
 
-# Fallback: 仅当 helper 文件不存在时走旧检测逻辑
-# helper 返回 unknown = 不支持的安装类型，不 patch
+# Fallback: 僅當 helper 檔案不存在時走舊偵測邏輯
+# helper 返回 unknown = 不支援的安裝型別，不 patch
 if [ "$HELPER_AVAILABLE" = false ] && [ -z "$CLI_FILE" ] && [ -z "$NATIVE_BINARY" ]; then
     CLI_FILE="$(dirname "$(which claude 2>/dev/null || true)")/../lib/node_modules/@anthropic-ai/claude-code/cli.js" 2>/dev/null || true
     if [ -z "$CLI_FILE" ] || [ ! -f "$CLI_FILE" ]; then
@@ -673,9 +673,9 @@ fi
 
 AUTO_PATCH_MSG=""
 if [ -n "$NATIVE_BINARY" ]; then
-    # support-window 只代表“发布前完整验证过”，不再充当 runtime 开关。
-    # 高于已知下限的可识别新版本走 provisional：只替换仍能精确命中的文案，
-    # 未知文案保留英文；repack 或 --version 自检失败则恢复干净备份。
+    # support-window 只代表“釋出前完整驗證過”，不再充當 runtime 開關。
+    # 高於已知下限的可識別新版本走 provisional：只替換仍能精確命中的文案，
+    # 未知文案保留英文；repack 或 --version 自檢失敗則恢復乾淨備份。
     CURRENT_VERSION=$(native_binary_version "$NATIVE_BINARY")
     NATIVE_PLATFORM=$(native_platform)
     PATCH_MODE=""
@@ -699,7 +699,7 @@ if [ -n "$NATIVE_BINARY" ]; then
             "$PATCH_MODE" \
             "$NATIVE_PLATFORM"; then
             if acquire_patch_lock "$NATIVE_BINARY"; then
-                # 另一个 SessionStart 可能刚完成同一文件；拿到锁后必须重新读取现场。
+                # 另一個 SessionStart 可能剛完成同一檔案；拿到鎖後必須重新讀取現場。
                 CURRENT_HASH=$(native_binary_hash "$NATIVE_BINARY")
                 PATCHED_VERSION=""
                 [ -f "$MARKER_FILE" ] && PATCHED_VERSION=$(cat "$MARKER_FILE")
@@ -720,7 +720,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                     backup_version=$(native_binary_version "$backup_path")
                 fi
 
-                # 同版本时恢复 backup 保证干净基底；版本变化时刷新 backup 为当前版本
+                # 同版本時恢復 backup 保證乾淨基底；版本變化時重新整理 backup 為目前版本
                 BACKUP_READY=false
                 if [ -f "$backup_path" ] && [ -n "${CURRENT_VERSION:-}" ] && [ "${CURRENT_VERSION:-}" = "${backup_version:-}" ]; then
                     if cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null; then
@@ -740,7 +740,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                             --log "$STATE_ROOT/patch.log" 2>/dev/null || echo "0")
                         PATCH_STATUS="$(cat "$status_file" 2>/dev/null || true)"
                         if [ -z "$PATCH_STATUS" ]; then
-                            # 兼容旧版/自定义 patch helper：只有数字计数时仍按 best-effort 处理。
+                            # 相容舊版/自定義 patch helper：只有數字計數時仍按 best-effort 處理。
                             if [ "$PATCH_COUNT" = "0" ]; then
                                 PATCH_STATUS="noop"
                             else
@@ -771,22 +771,22 @@ if [ -n "$NATIVE_BINARY" ]; then
                                     echo "$FINAL_MARKER" > "$MARKER_FILE"
 
                                     if [ "$PATCH_MODE" = "provisional" ]; then
-                                        AUTO_PATCH_MSG="（新版本已本机自验证，自动 patch ${PATCH_COUNT} 处；未覆盖文案继续显示英文）"
+                                        AUTO_PATCH_MSG="（新版本已本機自驗證，自動 patch ${PATCH_COUNT} 處；未覆蓋文案繼續顯示英文）"
                                     elif [ "$PATCH_STATUS" = "partial" ]; then
-                                        AUTO_PATCH_MSG="（已自动 patch ${PATCH_COUNT} 处；未覆盖文案继续显示英文）"
+                                        AUTO_PATCH_MSG="（已自動 patch ${PATCH_COUNT} 處；未覆蓋文案繼續顯示英文）"
                                     elif [ "$PATCH_COUNT" != "0" ]; then
-                                        AUTO_PATCH_MSG="（已自动 patch ${PATCH_COUNT} 处硬编码文字，启动自检通过）"
+                                        AUTO_PATCH_MSG="（已自動 patch ${PATCH_COUNT} 處硬編碼文字，啟動自檢通過）"
                                     fi
                                 else
                                     cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
                                 fi
                                 ;;
                             *)
-                                # patch-cli 未写回二进制；保持干净英文版本可用。
+                                # patch-cli 未寫回二進位制；保持乾淨英文版本可用。
                                 ;;
                         esac
                     else
-                        # 提取失败不触碰二进制；保留当前英文版本。
+                        # 提取失敗不觸碰二進位制；保留目前英文版本。
                         if [ -f "$backup_path" ]; then
                             cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
                         fi
@@ -794,15 +794,15 @@ if [ -n "$NATIVE_BINARY" ]; then
                 fi
                 rm -f "$tmp_js" "$status_file"
                     fi
-                    # node-lief 不可用 → 静默跳过，保持 hook JSON 合法
+                    # node-lief 不可用 → 靜默跳過，保持 hook JSON 合法
                 fi
                 release_patch_lock
             fi
         fi
     fi
 elif [ -f "$CLI_FILE" ]; then
-    # npm 自动 re-patch：备份/恢复/语法校验/失败回滚统一由 patch-cli.js 托管（--backup 模式）。
-    # 任何失败都只是"保持英文可用"（优雅降级），绝不让 CLI 坏掉。
+    # npm 自動 re-patch：備份/恢復/語法校驗/失敗回滾統一由 patch-cli.js 託管（--backup 模式）。
+    # 任何失敗都只是"保持英文可用"（優雅降級），絕不讓 CLI 壞掉。
     CURRENT_VERSION=$(head -6 "$CLI_FILE" | grep -o '// Version: [^ ]*' | head -1 | sed 's/\/\/ Version: //')
     PATCH_REVISION=$(compute_patch_revision "$PLUGIN_ROOT" 2>/dev/null || true)
     CURRENT_MARKER="${CURRENT_VERSION}"
@@ -832,15 +832,15 @@ elif [ -f "$CLI_FILE" ]; then
             ok|noop)
                 echo "$CURRENT_MARKER" > "$MARKER_FILE"
                 if [ "$PATCH_STATUS" = "ok" ] && [ "$PATCH_COUNT" != "0" ]; then
-                    AUTO_PATCH_MSG="（已自动 patch ${PATCH_COUNT} 处硬编码文字）"
+                    AUTO_PATCH_MSG="（已自動 patch ${PATCH_COUNT} 處硬編碼文字）"
                 fi
                 ;;
             partial)
-                # 部分降级：当前版本存在未覆盖文案，不更新 marker，等插件更新后重试
-                AUTO_PATCH_MSG="（已自动 patch ${PATCH_COUNT} 处；当前 Claude Code 版本存在未覆盖文案，部分界面保持英文，等待插件更新）"
+                # 部分降級：目前版本存在未覆蓋文案，不更新 marker，等外掛更新後重試
+                AUTO_PATCH_MSG="（已自動 patch ${PATCH_COUNT} 處；目前 Claude Code 版本存在未覆蓋文案，部分介面保持英文，等待外掛更新）"
                 ;;
             *)
-                # validation-failed / error：未写盘，CLI 保持原样可用；详情见 patch.log
+                # validation-failed / error：未寫盤，CLI 保持原樣可用；詳情見 patch.log
                 ;;
         esac
             release_patch_lock
@@ -850,12 +850,12 @@ fi
 
 repair_settings_from_cache
 
-# Skill/插件命令说明增量汉化（后台异步，不阻塞 hook 输出；新装项下次启动生效）
-# 默认禁用：会消耗用户 token/额度 + 修改本机文件，需用户显式 ZH_CN_SKILL_I18N_ENABLE=1 开启
-# HOOK=1 跳过：翻译子进程（translate spawn 的 claude CLI）不再触发同一 hook（防递归，review #3）
+# Skill/外掛命令說明增量漢化（背景非同步，不阻塞 hook 輸出；新裝項下次啟動生效）
+# 預設停用：會消耗使用者 token/額度 + 修改本機檔案，需使用者顯式 ZH_CN_SKILL_I18N_ENABLE=1 開啟
+# HOOK=1 跳過：翻譯子程序（translate spawn 的 claude CLI）不再觸發同一 hook（防遞迴，review #3）
 if [ "${ZH_CN_SKILL_I18N_ENABLE:-0}" = "1" ] && [ "${ZH_CN_SKILL_I18N_HOOK:-0}" != "1" ] && [ -x "$PLUGIN_ROOT/skill-i18n/translate-skills.sh" ]; then
-    # `( ) &` subshell 自身是新进程组的 leader，subshell PID == PGID。
-    # kill -- -PID 杀整个进程组（subshell + node + claude），25s 超时真的能停（review #3）。
+    # `( ) &` subshell 自身是新程序組的 leader，subshell PID == PGID。
+    # kill -- -PID 殺整個程序組（subshell + node + claude），25s 逾時真的能停（review #3）。
     (
         ZH_CN_SKILL_I18N_HOOK=1 \
         CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" \
@@ -866,15 +866,15 @@ if [ "${ZH_CN_SKILL_I18N_ENABLE:-0}" = "1" ] && [ "${ZH_CN_SKILL_I18N_HOOK:-0}" 
     disown "$SKILL_I18N_PID" 2>/dev/null || true
 fi
 
-# 读取用户输入
+# 讀取使用者輸入
 read -r INPUT
 
-# 输出中文上下文注入
+# 輸出中文上下文注入
 cat <<HOOK_OUTPUT
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "## 中文本地化提示\n\n你正在使用中文本地化版本。请遵循以下规则：\n- 默认使用中文（简体）回复用户\n- 技术术语保留英文（如 API、PR、git、npm、React、TypeScript 等）\n- 使用中文标点符号（，。！？：；「」）\n- 错误信息尽量提供中文解释，附带英文原文\n- 保持简洁直接的风格\n- 代码注释使用中文\n- 日期格式使用 YYYY年MM月DD日\n\n## 机器配置保护\n- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、权限规则、环境变量或工具参数时，必须优先保证机器可执行。\n- 保留 JSON key、枚举值、工具名、命令名、路径、环境变量名、subagent_type、slash command 和 shell 语法原文，不要翻译。\n- 只翻译给用户看的解释文字；不要为了中文化改变配置、命令或工具调用语义。\n\n## 常见错误信息翻译参考\n- Permission denied → 权限被拒绝\n- File not found → 文件未找到\n- Command not found → 命令未找到\n- Connection refused → 连接被拒绝\n- Timeout → 超时\n- Rate limited → 请求频率受限\n- Internal server error → 服务器内部错误\n- Unauthorized → 未授权\n- Forbidden → 禁止访问\n- Not found → 未找到${AUTO_UPDATE_MSG:+\\n\\n## 自动更新\\n${AUTO_UPDATE_MSG}}${AUTO_PATCH_MSG:+\\n\\n## 自动修复\\n${AUTO_PATCH_MSG}}"
+    "additionalContext": "## 中文本地化提示\n\n你正在使用中文本地化版本。請遵循以下規則：\n- 預設使用繁體中文（台灣）回覆使用者\n- 技術術語保留英文（如 API、PR、git、npm、React、TypeScript 等）\n- 使用中文標點符號（，。！？：；「」）\n- 錯誤資訊儘量提供中文解釋，附帶英文原文\n- 保持簡潔直接的風格\n- 程式碼註解使用中文\n- 日期格式使用 YYYY年MM月DD日\n\n## 機器配置保護\n- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、權限規則、環境變數或工具參數時，必須優先保證機器可執行。\n- 保留 JSON key、列舉值、工具名、命令名、路徑、環境變數名、subagent_type、slash command 和 shell 語法原文，不要翻譯。\n- 只翻譯給使用者看的解釋文字；不要為了中文化改變配置、命令或工具呼叫語義。\n\n## 常見錯誤資訊翻譯參考\n- Permission denied → 權限被拒絕\n- File not found → 檔案未找到\n- Command not found → 命令未找到\n- Connection refused → 連線被拒絕\n- Timeout → 逾時\n- Rate limited → 請求頻率受限\n- Internal server error → 伺服器內部錯誤\n- Unauthorized → 未授權\n- Forbidden → 禁止存取\n- Not found → 未找到${AUTO_UPDATE_MSG:+\\n\\n## 自動更新\\n${AUTO_UPDATE_MSG}}${AUTO_PATCH_MSG:+\\n\\n## 自動修復\\n${AUTO_PATCH_MSG}}"
   }
 }
 HOOK_OUTPUT

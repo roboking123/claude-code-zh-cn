@@ -16,22 +16,22 @@ try {
 TRANSLATED=""
 case "$MESSAGE" in
     *"Rate limited"*)
-        TRANSLATED="请求频率受限，请稍后再试"
+        TRANSLATED="請求頻率受限，請稍後再試"
         ;;
     *"Token limit reached"*)
-        TRANSLATED="Token 用量已达上限"
+        TRANSLATED="Token 用量已達上限"
         ;;
     *"Session expired"*)
-        TRANSLATED="会话已过期"
+        TRANSLATED="工作階段已過期"
         ;;
     *"Context window"*)
-        TRANSLATED="上下文窗口即将用尽，建议使用 /compact 压缩"
+        TRANSLATED="上下文視窗即將用盡，建議使用 /compact 壓縮"
         ;;
     *"Usage limit"*)
-        TRANSLATED="使用额度已达上限"
+        TRANSLATED="使用額度已達上限"
         ;;
     *"Auto-compact"*)
-        TRANSLATED="正在自动压缩对话历史..."
+        TRANSLATED="正在自動壓縮對話歷史..."
         ;;
 esac
 
@@ -41,7 +41,7 @@ if [ -n "$TRANSLATED" ]; then
 {
   "hookSpecificOutput": {
     "hookEventName": "Notification",
-    "additionalContext": "通知翻译：$TRANSLATED"
+    "additionalContext": "通知翻譯：$TRANSLATED"
   }
 }
 EOF
