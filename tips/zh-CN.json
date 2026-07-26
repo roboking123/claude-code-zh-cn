@@ -50,7 +50,7 @@
     },
     {
       "id": "status-line",
-      "text": "使用 /statusline 設定自定義狀態列，顯示在輸入框下方"
+      "text": "使用 /statusline 設定自訂狀態列，顯示在輸入框下方"
     },
     {
       "id": "prompt-queue",
@@ -62,7 +62,7 @@
     },
     {
       "id": "todo-list",
-      "text": "複雜任務時讓 Claude 建立待辦列表，跟蹤進度不跑偏"
+      "text": "複雜任務時讓 Claude 建立待辦列表，追蹤進度不偏離"
     },
     {
       "id": "vscode-command-install",
@@ -94,11 +94,11 @@
     },
     {
       "id": "double-esc",
-      "text": "快速雙擊 esc 可以回退對話到之前的某個時間點"
+      "text": "快速雙擊 esc 可以回溯對話到之前的某個時間點"
     },
     {
       "id": "double-esc-code-restore",
-      "text": "快速雙擊 esc 可以同時回退程式碼和對話到之前的某個時間點"
+      "text": "快速雙擊 esc 可以同時回溯程式碼和對話到之前的某個時間點"
     },
     {
       "id": "continue",
@@ -110,7 +110,7 @@
     },
     {
       "id": "custom-commands",
-      "text": "在專案的 .claude/skills/ 或全域性的 ~/.claude/skills/ 新增 .md 檔案來建立自定義技能"
+      "text": "在專案的 .claude/skills/ 或全域的 ~/.claude/skills/ 新增 .md 檔案來建立自訂技能"
     },
     {
       "id": "shift-tab",
@@ -130,7 +130,7 @@
     },
     {
       "id": "desktop-app",
-      "text": "透過 Claude 桌面應用在本地或遠端執行 Claude Code：clau.de/desktop"
+      "text": "透過 Claude 桌面應用在本機或遠端執行 Claude Code：clau.de/desktop"
     },
     {
       "id": "desktop-shortcut",
@@ -138,7 +138,7 @@
     },
     {
       "id": "web-app",
-      "text": "透過 clau.de/web 在雲端執行任務，同時本地繼續編碼"
+      "text": "透過 clau.de/web 在雲端執行任務，同時本機繼續編碼"
     },
     {
       "id": "mobile-app",

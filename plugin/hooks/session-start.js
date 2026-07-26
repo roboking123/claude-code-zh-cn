@@ -11,7 +11,7 @@ function fallbackOutput() {
     hookSpecificOutput: {
       hookEventName: "SessionStart",
       additionalContext: [
-        "## 中文本地化提示",
+        "## 中文在地化提示",
         "",
         "中文外掛的自動修復本次未執行；Claude Code 本體保持原樣可用。",
         "請繼續預設使用繁體中文（台灣）回覆，技術術語保留英文。",

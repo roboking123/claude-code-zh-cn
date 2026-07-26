@@ -454,7 +454,7 @@ if ($SourceRepo -and (Test-Path "$SourceRepo\.git") -and $env:ZH_CN_DISABLE_AUTO
                 -FilePath "git" `
                 -Arguments @("-C", $SourceRepo, "fetch", "--tags", "--quiet") `
                 -TimeoutSeconds $PluginUpdateTimeoutSeconds
-            # 拉取逾時仍可使用本地已有 tag；不會讓 SessionStart 一直等待網路。
+            # 拉取逾時仍可使用本機已有 tag；不會讓 SessionStart 一直等待網路。
             $LatestTag = (git -C $SourceRepo tag -l 'v*' --sort=-version:refname 2>$null | Select-Object -First 1)
             $LatestVersion = $LatestTag -replace '^v', ''
             if ($LatestTag -and $LatestVersion -and $LocalVersion -match '^\d+\.\d+\.\d+' -and $LatestVersion -match '^\d+\.\d+\.\d+') {
@@ -575,9 +575,9 @@ if (Test-Path $TmpDir) {
 $rawInput = [Console]::In.ReadToEnd()
 
 $ctxLines = @(
-    "## 中文本地化提示",
+    "## 中文在地化提示",
     "",
-    "你正在使用中文本地化版本。請遵循以下規則：",
+    "你正在使用中文在地化版本。請遵循以下規則：",
     "- 預設使用繁體中文（台灣）回覆使用者",
     "- 技術術語保留英文（如 API、PR、git、npm、React、TypeScript 等）",
     "- 使用中文標點符號（，。！？：；「」）",

@@ -25,7 +25,7 @@
   },
   {
     "en": " (untracked)",
-    "zh": " (未跟蹤)"
+    "zh": " (未追蹤)"
   },
   {
     "en": " Accept  ",
@@ -306,7 +306,7 @@
   },
   {
     "en": "/keybindings to customize",
-    "zh": "/keybindings 進行自定義"
+    "zh": "/keybindings 進行自訂"
   },
   {
     "en": "/plan to preview",
@@ -510,7 +510,7 @@
   },
   {
     "en": "Allow unsandboxed fallback:",
-    "zh": "允許回退到非沙盒模式："
+    "zh": "允許回溯到非沙盒模式："
   },
   {
     "en": "Allowed Unix Sockets:",
@@ -774,7 +774,7 @@
   },
   {
     "en": "Browse custom commands:",
-    "zh": "瀏覽自定義命令："
+    "zh": "瀏覽自訂命令："
   },
   {
     "en": "Browse default commands:",
@@ -974,7 +974,7 @@
   },
   {
     "en": "Claude Code Browser Extension Native Host",
-    "zh": "Claude Code 瀏覽器擴充功能本地宿主"
+    "zh": "Claude Code 瀏覽器擴充功能本機宿主"
   },
   {
     "en": "Claude Code Review - Automated code review on new PRs",
@@ -1506,19 +1506,19 @@
   },
   {
     "en": "Custom agent type for this teammate",
-    "zh": "此隊友的自定義 Agent 型別"
+    "zh": "此隊友的自訂 Agent 型別"
   },
   {
     "en": "Custom agents",
-    "zh": "自定義 Agent"
+    "zh": "自訂 Agent"
   },
   {
     "en": "Custom model",
-    "zh": "自定義模型"
+    "zh": "自訂模型"
   },
   {
     "en": "Custom tip",
-    "zh": "自定義提示"
+    "zh": "自訂提示"
   },
   {
     "en": "Dark mode",
@@ -1694,11 +1694,11 @@
   },
   {
     "en": "Double-tap esc to rewind the code and/or conversation to a previous point in time",
-    "zh": "雙擊 Esc 回退程式碼和/或對話到之前的某個時刻"
+    "zh": "雙擊 Esc 回溯程式碼和/或對話到之前的某個時刻"
   },
   {
     "en": "Double-tap esc to rewind the conversation to a previous point in time",
-    "zh": "雙擊 Esc 回退對話到之前的某個時刻"
+    "zh": "雙擊 Esc 回溯對話到之前的某個時刻"
   },
   {
     "en": "Due to prompt injection risks, only use it with code you trust",
@@ -1710,7 +1710,7 @@
   },
   {
     "en": "Each subagent has its own context window, custom system prompt, and specific tools.",
-    "zh": "每個子 Agent 有獨立的上下文視窗、自定義系統提示和專屬工具。"
+    "zh": "每個子 Agent 有獨立的上下文視窗、自訂系統提示和專屬工具。"
   },
   {
     "en": "Edit Claude memory files",
@@ -1790,7 +1790,7 @@
   },
   {
     "en": "Enable file checkpointing for code rewind",
-    "zh": "啟用檔案檢查點用於程式碼回退"
+    "zh": "啟用檔案檢查點用於程式碼回溯"
   },
   {
     "en": "Enable or disable thinking for this session.",
@@ -2155,7 +2155,7 @@
   },
   {
     "en": "File rewinding is not enabled.",
-    "zh": "檔案回退功能未啟用。"
+    "zh": "檔案回溯功能未啟用。"
   },
   {
     "en": "Files with errors are skipped entirely, not just the invalid settings.",
@@ -2383,7 +2383,7 @@
   },
   {
     "en": "I am using this for local development",
-    "zh": "我用於本地開發"
+    "zh": "我用於本機開發"
   },
   {
     "en": "If the redirect page shows a connection error, paste the URL from your browser's address bar:",
@@ -2499,7 +2499,7 @@
   },
   {
     "en": "Install for you, in this repo only (local scope)",
-    "zh": "為你安裝，僅此儲存庫（本地範圍）"
+    "zh": "為你安裝，僅此儲存庫（本機範圍）"
   },
   {
     "en": "Install it2 now",
@@ -2723,11 +2723,11 @@
   },
   {
     "en": "Local MCPs",
-    "zh": "本地 MCP"
+    "zh": "本機 MCP"
   },
   {
     "en": "Local agents",
-    "zh": "本地 Agent"
+    "zh": "本機 Agent"
   },
   {
     "en": "Location: ",
@@ -3015,7 +3015,7 @@
   },
   {
     "en": "No custom commands found",
-    "zh": "未找到自定義命令"
+    "zh": "未找到自訂命令"
   },
   {
     "en": "No diff content",
@@ -3191,7 +3191,7 @@
   },
   {
     "en": "Nothing to rewind to yet.",
-    "zh": "還沒有可回退的內容。"
+    "zh": "還沒有可回溯的內容。"
   },
   {
     "en": "Nothing to summarize after the selected message.",
@@ -3239,7 +3239,7 @@
   },
   {
     "en": "Only hooks from managed settings can run. User-defined hooks from ~/.claude/settings.json, .claude/settings.json, and .claude/settings.local.json are blocked.",
-    "zh": "只有託管設定中的 Hook 可以執行。使用者自定義 Hook（~/.claude/settings.json、.claude/settings.json 和 .claude/settings.local.json）已被阻止。"
+    "zh": "只有託管設定中的 Hook 可以執行。使用者自訂 Hook（~/.claude/settings.json、.claude/settings.json 和 .claude/settings.local.json）已被阻止。"
   },
   {
     "en": "Only needed for temporary credentials from STS. Leave empty for long-lived keys.",
@@ -3361,7 +3361,7 @@
   },
   {
     "en": "Override settings are managed by a higher-priority configuration and cannot be changed locally.",
-    "zh": "覆蓋設定由更高優先順序的配置管理，無法在本地更改。"
+    "zh": "覆蓋設定由更高優先順序的配置管理，無法在本機更改。"
   },
   {
     "en": "Override verbose mode setting from config",
@@ -3701,7 +3701,7 @@
   },
   {
     "en": "Project settings (local)",
-    "zh": "專案設定（本地）"
+    "zh": "專案設定（本機）"
   },
   {
     "en": "Prompt suggestions",
@@ -4045,11 +4045,11 @@
   },
   {
     "en": "Rewind code (checkpoints)",
-    "zh": "程式碼回退（檢查點）"
+    "zh": "程式碼回溯（檢查點）"
   },
   {
     "en": "Rewinds file changes made since a specific user message.",
-    "zh": "回退自特定使用者訊息以來的檔案更改。"
+    "zh": "回溯自特定使用者訊息以來的檔案更改。"
   },
   {
     "en": "Rule details",
@@ -4546,7 +4546,7 @@
   },
   {
     "en": "Start with all customizations (CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands and agents, output styles, workflows, custom themes, keybindings, and more) disabled \\u2014 useful for troubleshooting a broken configuration. Admin-managed (policy) settings still apply. Auth, model selection, built-in tools, and permissions work normally. Sets CLAUDE_CODE_SAFE_MODE=1.",
-    "zh": "啟動時停用所有自定義內容（CLAUDE.md、skills、plugins、Hooks、MCP servers、自定義命令和 Agent、output styles、workflows、自定義主題、keybindings 等）——用於排查損壞配置。管理員託管（policy）設定仍會生效。認證、模型選擇、內建工具和權限正常工作。設定 CLAUDE_CODE_SAFE_MODE=1。"
+    "zh": "啟動時停用所有自訂內容（CLAUDE.md、skills、plugins、Hooks、MCP servers、自訂命令和 Agent、output styles、workflows、自訂主題、keybindings 等）——用於排查損壞配置。管理員託管（policy）設定仍會生效。認證、模型選擇、內建工具和權限正常工作。設定 CLAUDE_CODE_SAFE_MODE=1。"
   },
   {
     "en": "Start fresh: discard the current conversation and context",
@@ -4834,7 +4834,7 @@
   },
   {
     "en": "This archives the remote session and stops local tracking. The review will not complete and any findings so far are discarded.",
-    "zh": "這將歸檔遠端工作階段並停止本地跟蹤。審查將不會完成，已收集的發現也會被丟棄。"
+    "zh": "這將歸檔遠端工作階段並停止本機追蹤。審查將不會完成，已收集的發現也會被丟棄。"
   },
   {
     "en": "This changes how Claude Code communicates with you",
@@ -5066,7 +5066,7 @@
   },
   {
     "en": "${billingNote}Ultrareview launched for ${target} (${duration}, runs in the cloud). Track: ${url}${scope}",
-    "zh": "${billingNote}Ultrareview 已為 ${target} 啟動（${duration}，雲端執行）。跟蹤：${url}${scope}"
+    "zh": "${billingNote}Ultrareview 已為 ${target} 啟動（${duration}，雲端執行）。追蹤：${url}${scope}"
   },
   {
     "en": "Run ultrareview in the cloud?",
@@ -5210,7 +5210,7 @@
   },
   {
     "en": "Use this skill to configure the Claude Code harness via settings.json. Automated behaviors (\"from now on when X\", \"each time X\", \"whenever X\", \"before/after X\") require hooks configured in settings.json - the harness executes these, not Claude, so memory/preferences cannot fulfill them. Also use for: permissions (\"allow X\", \"add permission\", \"move permission to\"), env vars (\"set X=Y\"), hook troubleshooting, or any changes to settings.json/settings.local.json files. Examples: \"allow npm commands\", \"add bq permission to global settings\", \"move permission to user settings\", \"set DEBUG=true\", \"when claude stops show X\". For simple settings like theme/model, use Config tool.",
-    "zh": "使用此技能透過 settings.json 配置 Claude Code harness。自動化行為（“從現在起當 X”“每次 X”“每當 X”“在 X 之前/之後”）需要在 settings.json 中配置 Hook - 這些由 harness 執行，不是 Claude，因此記憶/偏好無法滿足它們。也用於：權限（“允許 X”“新增權限”“移動權限到”）、環境變數（“設定 X=Y”）、Hook 故障排查，或對 settings.json/settings.local.json 的任何修改。示例：“允許 npm 命令”“向全域性設定新增 bq 權限”“將權限移到使用者設定”“設定 DEBUG=true”“當 claude 停止時顯示 X”。對於主題/模型這類簡單設定，請使用 Config 工具。"
+    "zh": "使用此技能透過 settings.json 配置 Claude Code harness。自動化行為（“從現在起當 X”“每次 X”“每當 X”“在 X 之前/之後”）需要在 settings.json 中配置 Hook - 這些由 harness 執行，不是 Claude，因此記憶/偏好無法滿足它們。也用於：權限（“允許 X”“新增權限”“移動權限到”）、環境變數（“設定 X=Y”）、Hook 故障排查，或對 settings.json/settings.local.json 的任何修改。示例：“允許 npm 命令”“向全域設定新增 bq 權限”“將權限移到使用者設定”“設定 DEBUG=true”“當 claude 停止時顯示 X”。對於主題/模型這類簡單設定，請使用 Config 工具。"
   },
   {
     "en": "Use this token by setting: export CLAUDE_CODE_OAUTH_TOKEN=<token>",
@@ -5535,7 +5535,7 @@
   },
   {
     "en": "Went down the wrong path? Rewind to before the detour and try a different prompt. Your git history stays clean.",
-    "zh": "走錯方向了？回退到岔路口之前，換個提示詞試試。你的 git 歷史不會受影響。"
+    "zh": "走錯方向了？回溯到岔路口之前，換個提示詞試試。你的 git 歷史不會受影響。"
   },
   {
     "en": "What do you want to do?",
@@ -5575,7 +5575,7 @@
   },
   {
     "en": "When the message selector (rewind) is open",
-    "zh": "當訊息選擇器（回退）開啟時"
+    "zh": "當訊息選擇器（回溯）開啟時"
   },
   {
     "en": "When viewing the transcript",
@@ -5792,7 +5792,7 @@
   },
   {
     "en": "Your bash commands will be sandboxed. Disable with /sandbox.",
-    "zh": "你的 bash 命令將在沙箱中執行。可用 /sandbox 停用。"
+    "zh": "你的 bash 命令將在沙盒中執行。可用 /sandbox 停用。"
   },
   {
     "en": "Your choice takes effect immediately upon confirmation.",
@@ -5800,7 +5800,7 @@
   },
   {
     "en": "Your local credentials are used to authenticate with GitHub",
-    "zh": "使用你的本地憑證進行 GitHub 認證"
+    "zh": "使用你的本機憑證進行 GitHub 認證"
   },
   {
     "en": "Your organization policy does not allow any external marketplaces.",
@@ -6419,11 +6419,11 @@
   },
   {
     "en": "JSON object defining custom agents (e.g. '{\"reviewer\": {\"description\": \"Reviews code\", \"prompt\": \"You are a code reviewer\"}}')",
-    "zh": "定義自定義 Agent 的 JSON 物件（例如 '{\"reviewer\": {\"description\": \"審查程式碼\", \"prompt\": \"你是程式碼審查員\"}}'）"
+    "zh": "定義自訂 Agent 的 JSON 物件（例如 '{\"reviewer\": {\"description\": \"審查程式碼\", \"prompt\": \"你是程式碼審查員\"}}'）"
   },
   {
     "en": "Enable bypassing all permission checks as an option, without it being enabled by default. Recommended only for sandboxes with no internet access.",
-    "zh": "允許把跳過所有權限檢查作為可選項，但預設不啟用。僅建議在無網路存取的沙箱中使用。"
+    "zh": "允許把跳過所有權限檢查作為可選項，但預設不啟用。僅建議在無網路存取的沙盒中使用。"
   },
   {
     "en": "Comma or space-separated list of tool names to allow (e.g. \"Bash(git *) Edit\")",
@@ -6451,7 +6451,7 @@
   },
   {
     "en": "Bypass all permission checks. Recommended only for sandboxes with no internet access.",
-    "zh": "跳過所有權限檢查。僅建議在無網路存取的沙箱中使用。"
+    "zh": "跳過所有權限檢查。僅建議在無網路存取的沙盒中使用。"
   },
   {
     "en": "Disable all skills",
@@ -6487,15 +6487,15 @@
   },
   {
     "en": "Enable automatic fallback to specified model when default model is overloaded (only works with --print)",
-    "zh": "預設模型過載時自動回退到指定模型（僅 --print 有效）"
+    "zh": "預設模型過載時自動回溯到指定模型（僅 --print 有效）"
   },
   {
     "en": "Enable automatic fallback to specified model(s) when the default model is overloaded or not available. Accepts a comma-separated list to try each in order. Re-tries the primary at the start of each user turn. (only works with --print)",
-    "zh": "預設模型過載或不可用時，自動回退到指定模型。可用逗號分隔多個模型並按順序嘗試；每輪使用者輸入開始時會重新嘗試主模型（僅 --print 有效）"
+    "zh": "預設模型過載或不可用時，自動回溯到指定模型。可用逗號分隔多個模型並按順序嘗試；每輪使用者輸入開始時會重新嘗試主模型（僅 --print 有效）"
   },
   {
     "en": "Enable automatic fallback to specified model when the default model is overloaded or not available (only works with --print)",
-    "zh": "預設模型過載或不可用時自動回退到指定模型（僅 --print 有效）"
+    "zh": "預設模型過載或不可用時自動回溯到指定模型（僅 --print 有效）"
   },
   {
     "en": "File resources to download at startup. Format: file_id:relative_path (e.g., --file file_abc:doc.txt file_def:img.png)",
@@ -6739,7 +6739,7 @@
   },
   {
     "en": "Get AI feedback on your custom auto mode rules",
-    "zh": "獲取 AI 對你自定義 auto mode 規則的回饋"
+    "zh": "獲取 AI 對你自訂 auto mode 規則的回饋"
   },
   {
     "en": "Print the default auto mode environment, allow, and deny rules as JSON",
@@ -7207,7 +7207,7 @@
   },
   {
     "en": "Verify that a code change actually does what it's supposed to by running the app and observing behavior. Use when asked to verify a PR, confirm a fix works, test a change manually, check that a feature works, or validate local changes before pushing.",
-    "zh": "透過執行應用並觀察行為，驗證程式碼改動是否真正達到預期。適用於使用者要求驗證 PR、確認修復生效、手動測試改動、檢查功能可用，或在推送前驗證本地改動時。"
+    "zh": "透過執行應用並觀察行為，驗證程式碼改動是否真正達到預期。適用於使用者要求驗證 PR、確認修復生效、手動測試改動、檢查功能可用，或在推送前驗證本機改動時。"
   },
   {
     "en": "Effort",

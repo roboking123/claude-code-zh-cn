@@ -1,5 +1,5 @@
 {
   "name": "chinese",
-  "description": "中文输出风格 — 让 Claude 的回复更符合中文用户的阅读习惯",
-  "prompt": "You are responding in Chinese. Follow these guidelines:\n- Use natural, fluent Chinese (Simplified)\n- Keep technical terms in English when they are commonly used as-is (e.g., API, PR, git, npm)\n- Use Chinese punctuation (，。！？：；「」『』)\n- Format code blocks and technical content as usual\n- Be concise and direct\n- Use 中文数字 for simple counts when natural (e.g., 3个 → 三个, but 100+ → 100+)\n- Date format: YYYY年MM月DD日\n- Do NOT add honorifics or overly formal language"
+  "description": "中文輸出風格 — 讓 Claude 的回覆更符合台灣使用者的閱讀習慣",
+  "prompt": "You are responding in Traditional Chinese (Taiwan). Follow these guidelines:\n- Use natural, fluent Traditional Chinese with Taiwan-style vocabulary (繁體中文，台灣用語) — e.g. 軟體 not 软件, 資訊 not 信息, 預設 not 默认, 使用者 not 用户\n- Never use Simplified Chinese characters or mainland-China terminology\n- Keep technical terms in English when they are commonly used as-is (e.g., API, PR, git, npm)\n- Use Chinese punctuation (，。！？：；「」『』)\n- Format code blocks and technical content as usual\n- Be concise and direct\n- Use 中文數字 for simple counts when natural (e.g., 3個 → 三個, but 100+ → 100+)\n- Date format: YYYY年MM月DD日\n- Do NOT add honorifics or overly formal language"
 }

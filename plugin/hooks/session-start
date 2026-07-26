@@ -740,7 +740,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                             --log "$STATE_ROOT/patch.log" 2>/dev/null || echo "0")
                         PATCH_STATUS="$(cat "$status_file" 2>/dev/null || true)"
                         if [ -z "$PATCH_STATUS" ]; then
-                            # 相容舊版/自定義 patch helper：只有數字計數時仍按 best-effort 處理。
+                            # 相容舊版/自訂 patch helper：只有數字計數時仍按 best-effort 處理。
                             if [ "$PATCH_COUNT" = "0" ]; then
                                 PATCH_STATUS="noop"
                             else
@@ -874,7 +874,7 @@ cat <<HOOK_OUTPUT
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "## 中文本地化提示\n\n你正在使用中文本地化版本。請遵循以下規則：\n- 預設使用繁體中文（台灣）回覆使用者\n- 技術術語保留英文（如 API、PR、git、npm、React、TypeScript 等）\n- 使用中文標點符號（，。！？：；「」）\n- 錯誤資訊儘量提供中文解釋，附帶英文原文\n- 保持簡潔直接的風格\n- 程式碼註解使用中文\n- 日期格式使用 YYYY年MM月DD日\n\n## 機器配置保護\n- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、權限規則、環境變數或工具參數時，必須優先保證機器可執行。\n- 保留 JSON key、列舉值、工具名、命令名、路徑、環境變數名、subagent_type、slash command 和 shell 語法原文，不要翻譯。\n- 只翻譯給使用者看的解釋文字；不要為了中文化改變配置、命令或工具呼叫語義。\n\n## 常見錯誤資訊翻譯參考\n- Permission denied → 權限被拒絕\n- File not found → 檔案未找到\n- Command not found → 命令未找到\n- Connection refused → 連線被拒絕\n- Timeout → 逾時\n- Rate limited → 請求頻率受限\n- Internal server error → 伺服器內部錯誤\n- Unauthorized → 未授權\n- Forbidden → 禁止存取\n- Not found → 未找到${AUTO_UPDATE_MSG:+\\n\\n## 自動更新\\n${AUTO_UPDATE_MSG}}${AUTO_PATCH_MSG:+\\n\\n## 自動修復\\n${AUTO_PATCH_MSG}}"
+    "additionalContext": "## 中文在地化提示\n\n你正在使用中文在地化版本。請遵循以下規則：\n- 預設使用繁體中文（台灣）回覆使用者\n- 技術術語保留英文（如 API、PR、git、npm、React、TypeScript 等）\n- 使用中文標點符號（，。！？：；「」）\n- 錯誤資訊儘量提供中文解釋，附帶英文原文\n- 保持簡潔直接的風格\n- 程式碼註解使用中文\n- 日期格式使用 YYYY年MM月DD日\n\n## 機器配置保護\n- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、權限規則、環境變數或工具參數時，必須優先保證機器可執行。\n- 保留 JSON key、列舉值、工具名、命令名、路徑、環境變數名、subagent_type、slash command 和 shell 語法原文，不要翻譯。\n- 只翻譯給使用者看的解釋文字；不要為了中文化改變配置、命令或工具呼叫語義。\n\n## 常見錯誤資訊翻譯參考\n- Permission denied → 權限被拒絕\n- File not found → 檔案未找到\n- Command not found → 命令未找到\n- Connection refused → 連線被拒絕\n- Timeout → 逾時\n- Rate limited → 請求頻率受限\n- Internal server error → 伺服器內部錯誤\n- Unauthorized → 未授權\n- Forbidden → 禁止存取\n- Not found → 未找到${AUTO_UPDATE_MSG:+\\n\\n## 自動更新\\n${AUTO_UPDATE_MSG}}${AUTO_PATCH_MSG:+\\n\\n## 自動修復\\n${AUTO_PATCH_MSG}}"
   }
 }
 HOOK_OUTPUT
