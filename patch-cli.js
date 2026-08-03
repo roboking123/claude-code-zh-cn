@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-// patch-cli.js - cli.js 硬编码文字中文 patch（安全版）
-// 逐条翻译：对每条翻译用正则匹配 "..." 内的目标文本，安全替换
-// 被 patch-cli.sh 调用
+// patch-cli.js - cli.js 硬編碼文字中文 patch（安全版）
+// 逐條翻譯：對每條翻譯用正則匹配 "..." 內的目標文本，安全替換
+// 被 patch-cli.sh 呼叫
 //
-// 优雅降级契约：
-// - 单条翻译/结构化 patch 匹配不上 → 跳过该条，其余照常（新版本改了文字 = 那条保持英文）
-// - patch 结果必须通过 JS 语法校验才落盘；校验失败 → 不写任何东西，CLI 保持原样可用
-// - 任何意外异常 → 记录日志后按"未改动"退出（exit 0），绝不让调用方误以为 patch 成功
+// 優雅降級契約：
+// - 單條翻譯/結構化 patch 匹配不上 → 跳過該條，其餘照常（新版本改了文字 = 那條保持英文）
+// - patch 結果必須通過 JS 語法校驗才落盤；校驗失敗 → 不寫任何東西，CLI 保持原樣可用
+// - 任何意外異常 → 記錄日誌後按"未改動"結束（exit 0），絕不讓呼叫方誤以為 patch 成功
 //
 // 用法: patch-cli.js <cliFile> <translationsFile> [--backup <path>] [--status <file>] [--log <file>]
-//   --backup  npm 托管备份模式：patch 前从同版本备份恢复干净基底；备份缺失/过期时自动重建
-//   --status  写入单词状态: ok | partial | noop | validation-failed | error
-//   --log     错误日志路径（默认与本脚本同目录的 patch.log）
+//   --backup  npm 託管備份模式：patch 前從同版本備份恢復乾淨基底；備份缺失/過期時自動重建
+//   --status  寫入單詞狀態: ok | partial | noop | validation-failed | error
+//   --log     錯誤日誌路徑（預設與本指令碼同目錄的 patch.log）
 
 const fs = require("fs");
 const os = require("os");
@@ -53,7 +53,7 @@ const RESIDUE_PROBES = [
     "Use /btw to ask a quick side question without interrupting Claude's current work",
 ];
 
-const PATCHED_TRACE_PROBES = ["安全检查：这是你自己创建", "等待权限确认…", "已切换模型为"];
+const PATCHED_TRACE_PROBES = ["安全檢查：這是你自己建立", "等待權限確認…", "已切換模型為"];
 
 function logEvent(message) {
     const line = `${new Date().toISOString()} ${message}\n`;
@@ -86,8 +86,8 @@ function looksPatched(text) {
     return PATCHED_TRACE_PROBES.some((probe) => text.includes(probe));
 }
 
-// 先用 vm.Script（CommonJS 语法，进程内、快）；失败再退到 node --check
-// （子进程，能正确解析 ESM——npm 的 cli.js 顶层有 import，vm.Script 必然报错）。
+// 先用 vm.Script（CommonJS 語法，程序內、快）；失敗再退到 node --check
+// （子程序，能正確解析 ESM——npm 的 cli.js 頂層有 import，vm.Script 必然報錯）。
 function parsesAsJs(text) {
     try {
         new vm.Script(text, { filename: cliFile });
@@ -113,8 +113,8 @@ function parsesAsJs(text) {
     }
 }
 
-// 语法校验策略：只有当"原文本身可被 Node 解析"时才要求 patch 结果也可解析。
-// 原文就解析不了（如 native 提取的 Bun JS 含非标准语法）→ 跳过校验，不误拦。
+// 語法校驗策略：只有當"原文本身可被 Node 解析"時才要求 patch 結果也可解析。
+// 原文就解析不了（如 native 提取的 Bun JS 含非標準語法）→ 跳過校驗，不誤攔。
 function validateSyntax(before, after) {
     if (!parsesAsJs(before)) {
         logEvent(`validation-skipped ${cliFile}: source is not parseable by Node (e.g. native extract)`);
@@ -144,7 +144,7 @@ if (!cliFile || !fs.existsSync(cliFile)) {
 const currentContent = fs.readFileSync(cliFile, "utf8");
 let original = currentContent;
 
-// --backup 托管备份模式：保证每次 patch 都基于干净的英文原文，杜绝 patch 叠 patch
+// --backup 託管備份模式：保證每次 patch 都基於乾淨的英文原文，杜絕 patch 疊 patch
 if (options.backup) {
     const backupFile = options.backup;
     const currentVersion = readVersionComment(currentContent);
@@ -158,10 +158,10 @@ if (options.backup) {
     }
 
     if (backupContent !== null && currentVersion && readVersionComment(backupContent) === currentVersion) {
-        // 同版本备份存在 → 用备份做干净基底
+        // 同版本備份存在 → 用備份做乾淨基底
         original = backupContent;
     } else if (!looksPatched(currentContent)) {
-        // 备份缺失/版本过期，且当前文件未被 patch 过 → 当前文件就是新 upstream 原文，刷新备份
+        // 備份缺失/版本過期，且當前檔案未被 patch 過 → 當前檔案就是新 upstream 原文，重新整理備份
         try {
             fs.writeFileSync(backupFile, currentContent);
         } catch (error) {
@@ -169,8 +169,8 @@ if (options.backup) {
         }
         original = currentContent;
     } else {
-        // 备份不可用且当前文件已被 patch 过：没有干净基底。
-        // 继续在当前文件上做增量 patch（翻译规则对已翻译文本天然幂等），语法校验兜底。
+        // 備份不可用且當前檔案已被 patch 過：沒有乾淨基底。
+        // 繼續在當前檔案上做增量 patch（翻譯規則對已翻譯文本天然冪等），語法校驗兜底。
         logEvent(`no-clean-backup ${cliFile}: patching in place (backup missing or version mismatch)`);
         original = currentContent;
     }
@@ -179,7 +179,7 @@ if (options.backup) {
 let s = original;
 let count = 0;
 
-// 全局兜底：任何未预期异常都按"未改动"退出，绝不落半成品
+// 全域性兜底：任何未預期異常都按"未改動"結束，絕不落半成品
 process.on("uncaughtException", (error) => {
     logEvent(`unexpected-error ${cliFile}: ${error && error.stack ? error.stack : error}`);
     writeStatus("error");
@@ -187,8 +187,8 @@ process.on("uncaughtException", (error) => {
     process.exit(0);
 });
 
-// === Helper：直接全量替换（仅用于特殊 patch，匹配特定代码模式）===
-// 单条 patch 内部异常只跳过该条（优雅降级），不中断整体流程
+// === Helper：直接全量替換（僅用於特殊 patch，匹配特定程式碼模式）===
+// 單條 patch 內部異常只跳過該條（優雅降級），不中斷整體流程
 
 function tryReplace(from, to) {
     if (s.includes(from)) {
@@ -700,28 +700,28 @@ function replaceLiteralText(text, en, zh) {
 const specialSplitLiteralTranslations = [
     {
         en: "Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project, or work from your team). If not, take a moment to review what's in this folder first.",
-        zh: "安全检查：这是你自己创建或信任的项目吗？（比如你自己的代码、知名开源项目、或团队的工作）。如果不是，请先查看此文件夹中的内容。",
+        zh: "安全檢查：這是你自己建立或信任的專案嗎？（例如你自己的程式碼、知名開源專案、或團隊的工作）。如果不是，請先檢視此資料夾中的內容。",
     },
     {
         en: "Claude Code'll be able to read, edit, and execute files here.",
-        zh: "Claude Code 将能在此目录中读取、编辑和执行文件。",
+        zh: "Claude Code 將能在此目錄中讀取、編輯和執行檔案。",
     },
 ];
 
 const specialLiteralTranslations = [
     { en: "Tab to amend", zh: "按 Tab 修改" },
-    { en: "ctrl+e to explain", zh: "按 ctrl+e 说明" },
-    { en: "Any Bash command starting with", zh: "任意 Bash 命令以" },
-    { en: "任意 Bash 命令 starting with", zh: "任意 Bash 命令以" },
-    { en: "The Bash command ", zh: "Bash 命令 " },
-    { en: "Requires manual approval", zh: "需要手动批准" },
+    { en: "ctrl+e to explain", zh: "按 ctrl+e 說明" },
+    { en: "Any Bash command starting with", zh: "任意 Bash 指令以" },
+    { en: "任意 Bash 指令 starting with", zh: "任意 Bash 指令以" },
+    { en: "The Bash command ", zh: "Bash 指令 " },
+    { en: "Requires manual approval", zh: "需要手動核准" },
     { en: "Waiting\\u2026", zh: "等待中…" },
-    { en: "Waiting for permission\\u2026", zh: "等待权限确认…" },
+    { en: "Waiting for permission\\u2026", zh: "等待權限確認…" },
     { en: "Working\\u2026", zh: "工作中…" },
-    { en: "Yes, and don\\u2019t ask again for", zh: "是，不再询问" },
-    { en: "Yes, and don’t ask again for", zh: "是，不再询问" },
-    { en: " ready · shift+↓ to view", zh: " 已就绪 · 按 shift+↓ 查看" },
-    { en: "Failed to save ", zh: "保存失败：" },
+    { en: "Yes, and don\\u2019t ask again for", zh: "是，不再詢問" },
+    { en: "Yes, and don’t ask again for", zh: "是，不再詢問" },
+    { en: " ready · shift+↓ to view", zh: " 已就緒 · 按 shift+↓ 檢視" },
+    { en: "Failed to save ", zh: "儲存失敗：" },
 ];
 
 function translateFastModeTemplateLiteral(literal) {
@@ -740,7 +740,7 @@ function translateFastModeTemplateLiteral(literal) {
         return false;
     }
 
-    textParts[0].value = hasOnlySuffix ? "切换快速模式（仅 " : "切换快速模式（";
+    textParts[0].value = hasOnlySuffix ? "切換快速模式（僅 " : "切換快速模式（";
     textParts[1].value = "）";
     literal.text = literal.parts.map((part) => part.value).join("");
     return true;
@@ -748,7 +748,7 @@ function translateFastModeTemplateLiteral(literal) {
 
 function applyDynamicLiteralTranslations(text) {
     return text.replace(/Toggle fast mode \((Opus [^)]+?)( only)?\)/g, (_match, model, only) => {
-        return only ? `切换快速模式（仅 ${model}）` : `切换快速模式（${model}）`;
+        return only ? `切換快速模式（僅 ${model}）` : `切換快速模式（${model}）`;
     });
 }
 
@@ -815,10 +815,10 @@ function installDurationFormatterLocalization() {
         const localized = fn
             .replace(/"0s"/g, '"0秒"')
             .replace(/}d\s+\$\{/g, "}天${")
-            .replace(/}h\s+\$\{/g, "}时${")
+            .replace(/}h\s+\$\{/g, "}小時${")
             .replace(/}m\s+\$\{/g, "}分${")
             .replace(/}d/g, "}天")
-            .replace(/}h/g, "}时")
+            .replace(/}h/g, "}小時")
             .replace(/}m/g, "}分")
             .replace(/}s/g, "}秒");
 
@@ -836,33 +836,33 @@ function installIssue80VisibleResidueLocalization() {
     tryRegexReplace(
         /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([^,]+),null,"Install the ",\1\.createElement\(\2,\{color:"ide"\},([A-Za-z0-9_$]+)\)," plugin from the JetBrains Marketplace:"," ",\1\.createElement\(\2,\{bold:!0\},"https:\/\/docs\.claude\.com\/s\/claude-code-jetbrains"\)\)/g,
         (match, factory, component, ideName) =>
-            `${factory}.createElement(${component},null,"从 JetBrains Marketplace 安装 ",${factory}.createElement(${component},{color:"ide"},${ideName})," 插件："," ",${factory}.createElement(${component},{bold:!0},"https://docs.claude.com/s/claude-code-jetbrains"))`
+            `${factory}.createElement(${component},null,"從 JetBrains Marketplace 安裝 ",${factory}.createElement(${component},{color:"ide"},${ideName})," 外掛："," ",${factory}.createElement(${component},{bold:!0},"https://docs.claude.com/s/claude-code-jetbrains"))`
     );
 
     tryRegexReplace(
         /let ([A-Za-z0-9_$]+)=`Set model to \$\{([^}]+)\}\$\{([^}]+)\?" and saved as your default for new sessions":" for this session only"\}`/g,
         (match, messageVar, modelExpr, defaultExpr) =>
-            `let ${messageVar}=\`已切换模型为 \${${modelExpr}}\${${defaultExpr}?"，并已保存为新会话默认模型":"（仅本次会话）"}\``
+            `let ${messageVar}=\`已切換模型為 \${${modelExpr}}\${${defaultExpr}?"，並已儲存為新工作階段預設模型":"（僅本次工作階段）"}\``
     );
 
     tryRegexReplace(
         /(\blet\s+|,)([A-Za-z0-9_$]+)=`Model set to \$\{([^}]+)\}\$\{([^}]+)\?" and saved as your default for new sessions":" for this session only"\}`/g,
         (match, prefix, messageVar, modelExpr, defaultExpr) =>
-            `${prefix}${messageVar}=\`已切换模型为 \${${modelExpr}}\${${defaultExpr}?"，并已保存为新会话默认模型":"（仅本次会话）"}\``
+            `${prefix}${messageVar}=\`已切換模型為 \${${modelExpr}}\${${defaultExpr}?"，並已儲存為新工作階段預設模型":"（僅本次工作階段）"}\``
     );
 
     tryRegexReplace(
         /([A-Za-z0-9_$]+)\(`Set model to \$\{([^}]+)\}`\)/g,
-        (match, notifyFn, modelExpr) => `${notifyFn}(\`已切换模型为 \${${modelExpr}}\`)`
+        (match, notifyFn, modelExpr) => `${notifyFn}(\`已切換模型為 \${${modelExpr}}\`)`
     );
 
     tryRegexReplace(
         /return`Review the current diff for correctness bugs and reuse\/simplification\/efficiency cleanups at the given effort level \(low\/medium: fewer, high-confidence findings; high\\u2192max: broader coverage, may include uncertain findings\$\{([\s\S]*?)\}\)\. Pass --comment to post findings as inline PR comments, or --fix to apply the findings to the working tree after the review\.`/g,
         (match, ultraExpr) => {
             const localizedUltraExpr = ultraExpr
-                .replace(/; ultra: deep multi-agent review in the cloud/g, "；ultra：云端深度多 Agent review")
-                .replace(/ \(requires claude\.ai account access\)/g, "（需要 claude.ai 账号权限）");
-            return `return\`审查当前 diff 的正确性问题，以及复用性、简化和效率改进；按指定 effort 级别执行（low/medium：只报更少、更高置信的问题；high→max：覆盖更广，可能包含不确定问题\${${localizedUltraExpr}}）。传 --comment 可将发现发布为 PR 行内评论，传 --fix 可在 review 后把发现应用到工作区。\``;
+                .replace(/; ultra: deep multi-agent review in the cloud/g, "；ultra：雲端深度多 Agent review")
+                .replace(/ \(requires claude\.ai account access\)/g, "（需要 claude.ai 賬號權限）");
+            return `return\`審查目前 diff 的正確性問題，以及複用性、簡化和效率改進；按指定 effort 級別執行（low/medium：只報更少、更高置信的問題；high→max：覆蓋更廣，可能包含不確定問題\${${localizedUltraExpr}}）。傳 --comment 可將發現釋出為 PR 行內評論，傳 --fix 可在 review 後把發現應用到工作區。\``;
         }
     );
 }
@@ -871,18 +871,18 @@ function installEffortAndWorkflowFooterLocalization() {
     tryRegexReplace(
         /`\$\{([^`]+?)\} to adjust \\xB7 \$\{([^`]+?)\} to confirm \\xB7 \$\{([^`]+?)\} to cancel`/g,
         (match, adjustKeys, confirmKeys, cancelKeys) =>
-            `\`\${${adjustKeys}} 调整 · \${${confirmKeys}} 确认 · \${${cancelKeys}} 取消\``
+            `\`\${${adjustKeys}} 調整 · \${${confirmKeys}} 確認 · \${${cancelKeys}} 取消\``
     );
 
     tryRegexReplace(
         /([A-Za-z0-9_$]+)\.createElement\(([A-Za-z0-9_$]+),null,\1\.createElement\(([A-Za-z0-9_$]+),\{chord:\["left","right"\],action:"adjust"\}\),\1\.createElement\(\3,\{chord:"enter",action:"confirm"\}\),\1\.createElement\(\3,\{chord:"escape",action:"cancel"\}\)\)/g,
         (match, factory, wrapper) =>
-            `${factory}.createElement(${wrapper},null,"←/→ 调整 · Enter 确认 · Esc 取消")`
+            `${factory}.createElement(${wrapper},null,"←/→ 調整 · Enter 確認 · Esc 取消")`
     );
 
     tryRegexReplace(
         /(?:[A-Za-z0-9_$]+\.)?[A-Za-z0-9_$]+\.createElement\(([A-Za-z0-9_$]+),\{chord:"escape",action:"close"\}\)/g,
-        () => '"Esc 关闭"'
+        () => '"Esc 關閉"'
     );
 }
 
@@ -890,17 +890,17 @@ function installCommonVisibleResidueLocalization() {
     tryRegexReplace(
         /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([A-Za-z0-9_$]+),null,\1\.createElement\(([A-Za-z0-9_$]+),\{chord:"enter",action:"confirm"\}\),\1\.createElement\(\3,\{chord:"escape",action:"cancel"\}\)\)/g,
         (match, factory, wrapper) =>
-            `${factory}.createElement(${wrapper},null,"Enter 确认","Esc 取消")`
+            `${factory}.createElement(${wrapper},null,"Enter 確認","Esc 取消")`
     );
 
     tryRegexReplace(
         /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([A-Za-z0-9_$]+),null,\1\.createElement\(([A-Za-z0-9_$]+),\{chord:"enter",action:"confirm"\}\),\1\.createElement\([A-Za-z0-9_$]+,\{action:"confirm:no",context:"Confirmation",fallback:"Esc",description:"cancel"\}\)\)/g,
         (match, factory, wrapper) =>
-            `${factory}.createElement(${wrapper},null,"Enter 确认","Esc 取消")`
+            `${factory}.createElement(${wrapper},null,"Enter 確認","Esc 取消")`
     );
 
-    tryRegexReplace(/" for agents"/g, () => '" 查看 Agent"');
-    tryRegexReplace(/"for agents"/g, () => '"查看 Agent"');
+    tryRegexReplace(/" for agents"/g, () => '" 檢視 Agent"');
+    tryRegexReplace(/"for agents"/g, () => '"檢視 Agent"');
     tryRegexReplace(/"again "/g, () => '"再次 "');
 }
 
@@ -908,22 +908,22 @@ function installWorkflowLifecycleResidueLocalization() {
     tryRegexReplace(
         /`Dynamic workflow requested for this turn\$\{([A-Za-z0-9_$]+)\?` \\xB7 \$\{\1\} to ignore`:""\}`/g,
         (match, keyHint) =>
-            "`本轮已请求动态工作流${" + keyHint + "?` · ${" + keyHint + "} 忽略`:\"\"}`"
+            "`本輪已請求動態工作流${" + keyHint + "?` · ${" + keyHint + "} 忽略`:\"\"}`"
     );
 
     tryRegexReplace(
         /`Ultracode keyword ignored for this prompt\$\{([A-Za-z0-9_$]+)\?` \\xB7 \$\{\1\} to undo`:""\}`/g,
         (match, keyHint) =>
-            "`已忽略本条提示词中的 Ultracode 关键词${" + keyHint + "?` · ${" + keyHint + "} 撤销`:\"\"}`"
+            "`已忽略本條提示詞中的 Ultracode 關鍵詞${" + keyHint + "?` · ${" + keyHint + "} 復原`:\"\"}`"
     );
 }
 
-// === 特殊 patch（基于精确代码模式匹配，安全）===
-// 这些 patch 匹配非常特定的代码模式，不会误伤标识符
+// === 特殊 patch（基於精確程式碼模式匹配，安全）===
+// 這些 patch 匹配非常特定的程式碼模式，不會誤傷識別符號
 
-// 0. /statusline 内部 agent prompt 防守：第三方模型容易猜错 /Users/... 绝对路径。
-// 保持英文，不做中文化；只强化工具路径契约。
-// 每个结构化 patch 独立执行，单个失败只跳过该项（记日志），其余照常。
+// 0. /statusline 內部 agent prompt 防守：第三方模型容易猜錯 /Users/... 絕對路徑。
+// 保持英文，不做中文化；只強化工具路徑契約。
+// 每個結構化 patch 獨立執行，單個失敗只跳過該項（記日誌），其餘照常。
 for (const step of [
     installStatuslinePromptPathGuard,
     installStatuslineCommandPromptPathGuard,
@@ -940,10 +940,10 @@ for (const step of [
     }
 }
 
-// 1. 过去式动词数组
+// 1. 過去式動詞陣列
 tryRegexReplace(
     /\["Baked","Brewed","Churned","Cogitated","Cooked","Crunched","Saut(?:\u00e9|\\u00e9|\\xE9)ed","Worked"\]/g,
-    () => '["烘焙了","沏了","翻搅了","琢磨了","烹饪了","嚼了","翻炒了","忙活了"]'
+    () => '["烘焙了","泡茶了","翻攪了","琢磨了","烹飪了","咀嚼了","翻炒了","忙了"]'
 );
 
 // 2. Tip: → 💡
@@ -954,7 +954,7 @@ if (tipMatch) {
     count++;
 }
 
-// 3. Duration formatter（时间单位中文化）
+// 3. Duration formatter（時間單位中文化）
 const marker = "if(q<60000)";
 const markerIdx = s.indexOf(marker);
 if (markerIdx !== -1) {
@@ -969,14 +969,14 @@ if (markerIdx !== -1) {
         if (fnEnd !== -1) {
             let fn = s.substring(fnStart, fnEnd + 1);
             const pairs = [
-                ["}d ${z}h ${Y}m ${$}s", "}天${z}时${Y}分${$}秒"],
-                ["}d ${z}h ${Y}m", "}天${z}时${Y}分"],
-                ["}h ${Y}m ${$}s", "}时${Y}分${$}秒"],
-                ["}d ${z}h", "}天${z}时"],
-                ["}h ${Y}m", "}时${Y}分"],
+                ["}d ${z}h ${Y}m ${$}s", "}天${z}小時${Y}分${$}秒"],
+                ["}d ${z}h ${Y}m", "}天${z}小時${Y}分"],
+                ["}h ${Y}m ${$}s", "}小時${Y}分${$}秒"],
+                ["}d ${z}h", "}天${z}小時"],
+                ["}h ${Y}m", "}小時${Y}分"],
                 ["}m ${$}s", "}分${$}秒"],
                 ["}d", "}天"],
-                ["}h", "}时"],
+                ["}h", "}小時"],
                 ["}m", "}分"],
                 ["}s", "}秒"],
                 ['"0s"', '"0秒"'],
@@ -996,70 +996,70 @@ if (markerIdx !== -1) {
     }
 }
 
-// 4. 去掉 duration display 的 "for" 连接词
+// 4. 去掉 duration display 的 "for" 連線詞
 // 原始: createElement(T, ..., verb, " for ", duration) → "沏了 for 27分26秒"
-// 修复: " for " → " "（仅匹配 createElement 文本节点模式）
+// 修復: " for " → " "（僅匹配 createElement 文本節點模式）
 tryReplace('," for ",', '," ",');
-tryReplace('"Idle for "', '"空闲 "');
+tryReplace('"Idle for "', '"閒置 "');
 
-// 4b. 主 spinner 的 duration display（反引号模板字符串）
+// 4b. 主 spinner 的 duration display（反引號模板字串）
 // 原: `${bL} Worked for ${w3(Date.now()-V.startTime)}` → "烘焙了 Worked for 27分26秒"
 // 修: `${bL} ${w3(Date.now()-V.startTime)}` → "烘焙了 27分26秒"
 tryReplace(' Worked for ${w3(Date.now()-V.startTime)}', ' ${w3(Date.now()-V.startTime)}');
-tryReplace('${bL} Idle', '${bL} 空闲');
+tryReplace('${bL} Idle', '${bL} 閒置');
 
-// 4c. 同类 duration 模板的泛化匹配
-// 某些版本会改变量名或表达式，但模板结构仍是 `${verb} Worked for ${duration}`。
-// 这里按模板形态处理，不再依赖固定变量名。
+// 4c. 同類 duration 模板的泛化匹配
+// 某些版本會改變數名或表示式，但模板結構仍是 `${verb} Worked for ${duration}`。
+// 這裡按模板形態處理，不再依賴固定變數名。
 tryRegexReplace(/\$\{[^}]+\}\s+Worked for\s+\$\{[^}]+\}/g, (match) =>
     match.replace(" Worked for ", " ")
 );
 tryRegexReplace(/\?`Worked for \$\{([^}]+)\}`:"Idle"/g, (match, durationExpr) =>
-    `?\`忙活了 \${${durationExpr}}\`:"空闲"`
+    `?\`忙了 \${${durationExpr}}\`:"閒置"`
 );
 tryRegexReplace(/\$\{[^}]+\}\s+Idle(?=[`"])/g, (match) =>
-    match.replace(" Idle", " 空闲")
+    match.replace(" Idle", " 閒置")
 );
 
-// 4d. 消息完成后的状态行（显示 "翻搅了 for 51秒" 的地方）
-// 原: let G=H&&`${O} for ${M}`  （O=动词, M=时长）
-// 修: let G=H&&`${O} ${M}`     → "翻搅了 51秒"
+// 4d. 訊息完成後的狀態行（顯示 "翻攪了 for 51秒" 的地方）
+// 原: let G=H&&`${O} for ${M}`  （O=動詞, M=時長）
+// 修: let G=H&&`${O} ${M}`     → "翻攪了 51秒"
 tryReplace('`${O} for ${M}`', '`${O} ${M}`');
 tryRegexReplace(/&&`\$\{[^}]+\} for \$\{[^}]+\}`/g, (match) =>
     match.replace(" for ", " ")
 );
 
-// 4e. /clear 省上下文提示（split fragment → 稳定模板）
+// 4e. /clear 省上下文提示（split fragment → 穩定模板）
 tryRegexReplace(
     /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([^,]+),\{color:"suggestion"\},"\/clear"\),\1\.createElement\(\2,\{dimColor:!0\}," to save "\),\1\.createElement\(\2,\{color:"suggestion"\},([A-Za-z0-9_$]+)," tokens"\)/g,
     (match, factory, component, tokenCount) =>
-        `${factory}.createElement(${component},{color:"suggestion"},"/clear"),${factory}.createElement(${component},{dimColor:!0}," 保存 "),${factory}.createElement(${component},{color:"suggestion"},${tokenCount}," tokens")`
+        `${factory}.createElement(${component},{color:"suggestion"},"/clear"),${factory}.createElement(${component},{dimColor:!0}," 儲存 "),${factory}.createElement(${component},{color:"suggestion"},${tokenCount}," tokens")`
 );
 
-// 5. 保存并编辑快捷键提示（split fragment → 稳定模板）
+// 5. 儲存並編輯快捷鍵提示（split fragment → 穩定模板）
 tryRegexReplace(
     /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([^,]+),\{color:"success"\},"Press ",([A-Za-z0-9_$]+)," or ",([A-Za-z0-9_$]+)," to save,"," ",\1\.createElement\(\2,\{bold:!0\},"e"\)," to save and edit"\)/g,
     (match, factory, component, primaryKey, secondaryKey) =>
-        `${factory}.createElement(${component},{color:"success"},"按 ",${primaryKey}," 或 ",${secondaryKey}," 保存，按 ",${factory}.createElement(${component},{bold:!0},"e")," 保存并编辑")`
+        `${factory}.createElement(${component},{color:"success"},"按 ",${primaryKey}," 或 ",${secondaryKey}," 儲存，按 ",${factory}.createElement(${component},{bold:!0},"e")," 儲存並編輯")`
 );
 
-// 6. Quick Launch / plan open 等单点高风险 UI 片段迁移到结构化 patch
+// 6. Quick Launch / plan open 等單點高風險 UI 片段遷移到結構化 patch
 tryRegexReplace(
     /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([^,]+),null,"• Cmd\+Esc",\1\.createElement\(\2,\{dimColor:!0\}," for Quick Launch"\)\)/g,
     (match, factory, component) =>
-        `${factory}.createElement(${component},null,"• 快速启动",${factory}.createElement(${component},{dimColor:!0}," · Cmd+Esc"))`
+        `${factory}.createElement(${component},null,"• 快速啟動",${factory}.createElement(${component},{dimColor:!0}," · Cmd+Esc"))`
 );
 tryRegexReplace(
     /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([^,]+),\{marginTop:1\},\1\.createElement\(([^,]+),\{dimColor:!0\},['"]"\/plan open"['"]\),\1\.createElement\(\3,\{dimColor:!0\}," to edit this plan in "\),\1\.createElement\(\3,\{bold:!0,dimColor:!0\},([A-Za-z0-9_$]+)\)\)/g,
     (match, factory, containerComponent, textComponent, terminalName) =>
-        `${factory}.createElement(${containerComponent},{marginTop:1},${factory}.createElement(${textComponent},{dimColor:!0},"在 "),${factory}.createElement(${textComponent},{bold:!0,dimColor:!0},${terminalName}),${factory}.createElement(${textComponent},{dimColor:!0},' 中用 "/plan open" 编辑此计划'))`
+        `${factory}.createElement(${containerComponent},{marginTop:1},${factory}.createElement(${textComponent},{dimColor:!0},"在 "),${factory}.createElement(${textComponent},{bold:!0,dimColor:!0},${terminalName}),${factory}.createElement(${textComponent},{dimColor:!0},' 中用 "/plan open" 編輯此計劃'))`
 );
 
-// 7. 权限确认面板的新 native UI 片段（避免全局翻译 Bash/Yes/No 误伤系统提示）
+// 7. 權限確認面板的新 native UI 片段（避免全域性翻譯 Bash/Yes/No 誤傷系統提示）
 tryRegexReplace(
     /title:([A-Za-z0-9_$]+)&&!([A-Za-z0-9_$]+)\?"Bash command \(unsandboxed\)":"Bash command"/g,
     (match, sandboxed, visible) =>
-        `title:${sandboxed}&&!${visible}?"Bash 命令（未沙盒隔离）":"Bash 命令"`
+        `title:${sandboxed}&&!${visible}?"Bash 指令（未沙盒隔離）":"Bash 指令"`
 );
 tryRegexReplace(/label:"Yes",value:"yes"/g, () => 'label:"是",value:"yes"');
 tryRegexReplace(/label:"No",value:"no"/g, () => 'label:"否",value:"no"');
@@ -1069,11 +1069,11 @@ tryRegexReplace(
         `${factory}.createElement(${component},{dimColor:!0},"任意使用 ",${factory}.createElement(${component},{bold:!0},${toolName})," 工具")`
 );
 
-// === 逐条翻译：只替换真实的字符串字面量 ===
+// === 逐條翻譯：只替換真實的字串字面量 ===
 //
-// 先处理 minifier 把 `'` 拆成 `"foo","'","bar"` 的高风险字面量（folder trust、/btw 等），
-// 再扫描源码中的真实字符串 token，只在这些 token 内做替换。
-// 这样不会跨越源码结构误改对象键、标识符或注释。
+// 先處理 minifier 把 `'` 拆成 `"foo","'","bar"` 的高風險字面量（folder trust、/btw 等），
+// 再掃描原始碼中的真實字串 token，只在這些 token 內做替換。
+// 這樣不會跨越原始碼結構誤改物件鍵、識別符號或註釋。
 
 if (translationsFile && fs.existsSync(translationsFile)) {
     const translationRules = [
@@ -1160,14 +1160,14 @@ if (translationsFile && fs.existsSync(translationsFile)) {
     }
 }
 
-// === 只有实际改变文件内容才写入 ===
-// s 是基于干净基底（original）patch 后的完整结果；currentContent 是磁盘上的现状。
-// 两者一致 → 无需写盘；不一致 → 语法校验通过后原子替换。
+// === 只有實際改變檔案內容才寫入 ===
+// s 是基於乾淨基底（original）patch 後的完整結果；currentContent 是磁碟上的現狀。
+// 兩者一致 → 無需寫盤；不一致 → 語法校驗通過後原子替換。
 if (s === currentContent) {
     exitNoChange(residueStatus(s) === "ok" ? "noop" : "partial");
 }
 
-// 语法校验：patch 结果必须是合法 JS，否则放弃写盘（磁盘保持原状，CLI 可用）
+// 語法校驗：patch 結果必須是合法 JS，否則放棄寫盤（磁碟保持原狀，CLI 可用）
 if (!validateSyntax(original, s)) {
     writeStatus("validation-failed");
     console.log("0");
@@ -1183,7 +1183,7 @@ try {
     fs.chmodSync(tmp, origMode);
 
     if (process.platform === "win32") {
-        // NTFS 不能直接 rename 覆盖目标；先把原文件挪到唯一回滚位，再提交新文件。
+        // NTFS 不能直接 rename 覆蓋目標；先把原檔案挪到唯一回滾位，再提交新檔案。
         const rollback = `${cliFile}.zh-cn-swap-backup.${uniqueSuffix}`;
         fs.renameSync(cliFile, rollback);
         try {
@@ -1192,7 +1192,7 @@ try {
             try {
                 fs.renameSync(rollback, cliFile);
             } catch {
-                // rename 回滚仍失败时用 copy 兜底，不能让 cli.js 消失。
+                // rename 回滾仍失敗時用 copy 兜底，不能讓 cli.js 消失。
                 fs.copyFileSync(rollback, cliFile);
                 try { fs.unlinkSync(rollback); } catch {}
             }
@@ -1200,7 +1200,7 @@ try {
         }
         try { fs.unlinkSync(rollback); } catch {}
     } else {
-        // 同目录 rename 在 POSIX 上是原子替换；并发进程最多最后一次写入胜出。
+        // 同目錄 rename 在 POSIX 上是原子替換；併發程序最多最後一次寫入勝出。
         fs.renameSync(tmp, cliFile);
     }
 } catch (error) {
