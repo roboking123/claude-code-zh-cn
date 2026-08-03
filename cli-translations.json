@@ -89,7 +89,7 @@
   },
   {
     "en": " instead of Claude account subscription token. Either unset",
-    "zh": " 而非 Claude 賬號訂閱權杖。請取消設定"
+    "zh": " 而非 Claude 帳號訂閱權杖。請取消設定"
   },
   {
     "en": " navigate · ",
@@ -97,8 +97,7 @@
   },
   {
     "en": " or ",
-    "zh": " 或 ",
-    "skipPatch": "model-prompt-contract"
+    "zh": " 或 "
   },
   {
     "en": " report the issue at https://github.com/anthropics/claude-code/issues",
@@ -1022,7 +1021,7 @@
   },
   {
     "en": "Claude account with subscription ·",
-    "zh": "Claude 訂閱賬號 ·"
+    "zh": "Claude 訂閱帳號 ·"
   },
   {
     "en": "Claude can make mistakes",
@@ -2102,8 +2101,7 @@
   },
   {
     "en": "Fast mode",
-    "zh": "快速模式",
-    "skipPatch": "model-prompt-contract"
+    "zh": "快速模式"
   },
   {
     "en": "Fast mode OFF",
@@ -2759,7 +2757,7 @@
   },
   {
     "en": "Login with Claude account",
-    "zh": "使用 Claude 賬號登入"
+    "zh": "使用 Claude 帳號登入"
   },
   {
     "en": "Long builds and test suites do not have to block you. Add",
@@ -3299,7 +3297,7 @@
   },
   {
     "en": "Opening browser to sign in with your Claude account…",
-    "zh": "正在開啟瀏覽器登入你的 Claude 賬號…"
+    "zh": "正在開啟瀏覽器登入你的 Claude 帳號…"
   },
   {
     "en": "Opening browser to sign in…",
@@ -3351,13 +3349,11 @@
   },
   {
     "en": "Output Style",
-    "zh": "輸出風格",
-    "skipPatch": "model-prompt-contract"
+    "zh": "輸出風格"
   },
   {
     "en": "Output style",
-    "zh": "輸出風格",
-    "skipPatch": "model-prompt-contract"
+    "zh": "輸出風格"
   },
   {
     "en": "Override settings are managed by a higher-priority configuration and cannot be changed locally.",
@@ -4157,8 +4153,7 @@
   },
   {
     "en": "Saving a memory is a two-step process:",
-    "zh": "儲存記憶分兩步：",
-    "skipPatch": "model-prompt-contract"
+    "zh": "儲存記憶分兩步："
   },
   {
     "en": "Scope: ",
@@ -4382,7 +4377,7 @@
   },
   {
     "en": "Setup Claude Code on the web (requires connecting your GitHub account)",
-    "zh": "在網頁上設定 Claude Code（需連線 GitHub 賬號）"
+    "zh": "在網頁上設定 Claude Code（需連線 GitHub 帳號）"
   },
   {
     "en": "Setup Warnings",
@@ -4402,7 +4397,7 @@
   },
   {
     "en": "Show Claude Code status including version, model, account, API connectivity, and tool statuses",
-    "zh": "顯示 Claude Code 狀態，包括版本、模型、賬號、API 連線性和工具狀態"
+    "zh": "顯示 Claude Code 狀態，包括版本、模型、帳號、API 連線性和工具狀態"
   },
   {
     "en": "Show Claude logo watermark (default: true)",
@@ -4490,11 +4485,11 @@
   },
   {
     "en": "Sign in with your Anthropic account",
-    "zh": "使用你的 Anthropic 賬號登入"
+    "zh": "使用你的 Anthropic 帳號登入"
   },
   {
     "en": "Sign out from your Anthropic account",
-    "zh": "離開 Anthropic 賬號"
+    "zh": "離開 Anthropic 帳號"
   },
   {
     "en": "Signal that this session was launched from a deep link",
@@ -4566,7 +4561,7 @@
   },
   {
     "en": "Starting new login following /upgrade. Exit with Ctrl-C to use existing account.",
-    "zh": "/upgrade 後重新登入。按 Ctrl-C 使用現有賬號。"
+    "zh": "/upgrade 後重新登入。按 Ctrl-C 使用現有帳號。"
   },
   {
     "en": "Stash changes and continue",
@@ -4630,7 +4625,7 @@
   },
   {
     "en": "Successfully logged out from your Anthropic account.",
-    "zh": "已成功登出你的 Anthropic 賬號。"
+    "zh": "已成功登出你的 Anthropic 帳號。"
   },
   {
     "en": "Suggestion ",
@@ -4658,7 +4653,7 @@
   },
   {
     "en": "Switch Anthropic accounts",
-    "zh": "切換 Anthropic 賬號"
+    "zh": "切換 Anthropic 帳號"
   },
   {
     "en": "Switch to the Marketplaces tab to view allowed sources.",
@@ -4726,11 +4721,11 @@
   },
   {
     "en": "Teleport requires a Claude account",
-    "zh": "傳送功能需要 Claude 賬號"
+    "zh": "傳送功能需要 Claude 帳號"
   },
   {
     "en": "Teleport requires a Claude.ai account.",
-    "zh": "傳送功能需要 Claude.ai 賬號。"
+    "zh": "傳送功能需要 Claude.ai 帳號。"
   },
   {
     "en": "Teleport to Repo",
@@ -5374,8 +5369,7 @@
   },
   {
     "en": "Version: ",
-    "zh": "版本：",
-    "skipPatch": "model-prompt-contract"
+    "zh": "版本："
   },
   {
     "en": "Vertex base URL",
@@ -5759,8 +5753,7 @@
   },
   {
     "en": "You have been invoked in the following environment: ",
-    "zh": "你已在以下環境中被呼叫：",
-    "skipPatch": "model-prompt-contract"
+    "zh": "你已在以下環境中被呼叫："
   },
   {
     "en": "You have not answered all questions",
@@ -5812,8 +5805,7 @@
   },
   {
     "en": "Your responses should be short and concise.",
-    "zh": "你的回覆應該簡短精煉。",
-    "skipPatch": "model-prompt-contract"
+    "zh": "你的回覆應該簡短精煉。"
   },
   {
     "en": "[Image data detected and sent to Claude]",
@@ -5865,13 +5857,11 @@
   },
   {
     "en": "active agent",
-    "zh": "活動 Agent",
-    "skipPatch": "model-prompt-contract"
+    "zh": "活動 Agent"
   },
   {
     "en": "active shell",
-    "zh": "活動 Shell",
-    "skipPatch": "model-prompt-contract"
+    "zh": "活動 Shell"
   },
   {
     "en": "add hook",
@@ -6723,11 +6713,11 @@
   },
   {
     "en": "Sign in to your Anthropic account",
-    "zh": "登入你的 Anthropic 賬號"
+    "zh": "登入你的 Anthropic 帳號"
   },
   {
     "en": "Log out from your Anthropic account",
-    "zh": "離開你的 Anthropic 賬號"
+    "zh": "離開你的 Anthropic 帳號"
   },
   {
     "en": "Show authentication status",
@@ -7167,7 +7157,7 @@
   },
   {
     "en": "Set up Claude Code on the web with your GitHub account",
-    "zh": "用你的 GitHub 賬號設定 Claude Code on the web"
+    "zh": "用你的 GitHub 帳號設定 Claude Code on the web"
   },
   {
     "en": "Browse running and completed workflows",
@@ -7588,5 +7578,453 @@
   {
     "en": "Add Claude Code GitHub Workflow",
     "zh": "新增 Claude Code GitHub 工作流"
+  },
+  {
+    "en": "Agents view",
+    "zh": "Agent 檢視"
+  },
+  {
+    "en": "Allow unsandboxed fallback",
+    "zh": "允許退回非沙盒執行"
+  },
+  {
+    "en": "Another Claude session sent a message",
+    "zh": "另一個 Claude 工作階段發來了一條訊息"
+  },
+  {
+    "en": "Another Claude session sent a message while you were working:",
+    "zh": "您工作時，另一個 Claude 工作階段發來了一條訊息："
+  },
+  {
+    "en": "Authenticate with `/mcp` in the terminal.",
+    "zh": "在終端中使用 `/mcp` 進行認證。"
+  },
+  {
+    "en": "Author name cannot be empty",
+    "zh": "作者名稱不能為空"
+  },
+  {
+    "en": "Available commands",
+    "zh": "可用命令"
+  },
+  {
+    "en": "Background dialog dismissed",
+    "zh": "背景對話方塊已關閉"
+  },
+  {
+    "en": "Background this session?",
+    "zh": "將此工作階段轉入背景？"
+  },
+  {
+    "en": "Blocked by hook",
+    "zh": "被 Hook 攔截"
+  },
+  {
+    "en": "Buy usage credits",
+    "zh": "購買使用額度"
+  },
+  {
+    "en": "By confirming, you allow Anthropic to charge your card in the amount above.",
+    "zh": "確認後，即表示您授權 Anthropic 按上述金額從您的卡片扣款。"
+  },
+  {
+    "en": "Catch you later!",
+    "zh": "下次見！"
+  },
+  {
+    "en": "Check in from your phone",
+    "zh": "從手機端檢視"
+  },
+  {
+    "en": "Check its config with `/mcp` in the terminal.",
+    "zh": "在終端中使用 `/mcp` 檢查其配置。"
+  },
+  {
+    "en": "Check the Claude Code changelog for updates",
+    "zh": "檢視 Claude Code 更新日誌以瞭解最新更新"
+  },
+  {
+    "en": "Claude Code needs your input",
+    "zh": "Claude Code 需要您的輸入"
+  },
+  {
+    "en": "Claude in Chrome requires permission.",
+    "zh": "Claude in Chrome 需要權限。"
+  },
+  {
+    "en": "Cloud session",
+    "zh": "雲端工作階段"
+  },
+  {
+    "en": "Cloud session details dismissed",
+    "zh": "雲端工作階段詳情已關閉"
+  },
+  {
+    "en": "Cloud sessions",
+    "zh": "雲端工作階段"
+  },
+  {
+    "en": "Cloud sessions are only available on the first-party Anthropic API provider.",
+    "zh": "雲端工作階段僅在第一方 Anthropic API 提供商上可用。"
+  },
+  {
+    "en": "Command cannot be empty",
+    "zh": "命令不能為空"
+  },
+  {
+    "en": "Command configuration",
+    "zh": "命令配置"
+  },
+  {
+    "en": "Design login was interrupted.",
+    "zh": "設計平台登入已中斷。"
+  },
+  {
+    "en": "Disable auto mode",
+    "zh": "關閉自動模式"
+  },
+  {
+    "en": "Don't Ask",
+    "zh": "不再詢問"
+  },
+  {
+    "en": "Draft restored",
+    "zh": "草稿已恢復"
+  },
+  {
+    "en": "Elicitation denied by hook",
+    "zh": "資訊採集被 Hook 拒絕"
+  },
+  {
+    "en": "Enter an amount",
+    "zh": "請輸入金額"
+  },
+  {
+    "en": "Enterprise managed settings",
+    "zh": "企業託管設定"
+  },
+  {
+    "en": "Error submitting feedback / bug report",
+    "zh": "提交回饋 / 錯誤報告失敗"
+  },
+  {
+    "en": "File does not exist",
+    "zh": "檔案不存在"
+  },
+  {
+    "en": "Fix with Claude",
+    "zh": "用 Claude 修復"
+  },
+  {
+    "en": "GitHub App installed!",
+    "zh": "GitHub App 已安裝！"
+  },
+  {
+    "en": "Hook cancelled",
+    "zh": "Hook 已取消"
+  },
+  {
+    "en": "IDE selection cancelled",
+    "zh": "IDE 選擇已取消"
+  },
+  {
+    "en": "Input & controls",
+    "zh": "輸入與控制"
+  },
+  {
+    "en": "Installation cancelled by user",
+    "zh": "安裝已被使用者取消"
+  },
+  {
+    "en": "Interactive planning on the web where you can edit and leave targeted comments on Claude's plan.",
+    "zh": "在網頁上進行互動式規劃，您可以對 Claude 的方案進行編輯並留下針對性的評論。"
+  },
+  {
+    "en": "Leave it",
+    "zh": "保留原樣"
+  },
+  {
+    "en": "Let Claude decide",
+    "zh": "由 Claude 決定"
+  },
+  {
+    "en": "Login successful",
+    "zh": "登入成功"
+  },
+  {
+    "en": "MCP server not connected",
+    "zh": "MCP 伺服器未連線"
+  },
+  {
+    "en": "MCP tool returned an error",
+    "zh": "MCP 工具返回了錯誤"
+  },
+  {
+    "en": "Marketplace must have a name",
+    "zh": "市場必須有一個名稱"
+  },
+  {
+    "en": "Model & output",
+    "zh": "模型與輸出"
+  },
+  {
+    "en": "Multi-file Changes",
+    "zh": "多檔案改動"
+  },
+  {
+    "en": "Neither — skip setup",
+    "zh": "都不需要 — 跳過設定"
+  },
+  {
+    "en": "No IDE selected.",
+    "zh": "未選擇 IDE。"
+  },
+  {
+    "en": "No URL configured for this server",
+    "zh": "未為此伺服器配置 URL"
+  },
+  {
+    "en": "Not authenticated with a claude.ai account.",
+    "zh": "未通過 claude.ai 帳號認證。"
+  },
+  {
+    "en": "Note: may discard all working tree changes",
+    "zh": "注意：可能會丟棄所有工作區更改"
+  },
+  {
+    "en": "Note: may discard uncommitted changes",
+    "zh": "注意：可能會丟棄未提交的更改"
+  },
+  {
+    "en": "Note: may drop or truncate database objects",
+    "zh": "注意：可能會刪除或截斷資料庫物件"
+  },
+  {
+    "en": "Note: may force-remove files",
+    "zh": "注意：可能會強制刪除檔案"
+  },
+  {
+    "en": "Note: may overwrite remote history",
+    "zh": "注意：可能會覆蓋遠端歷史"
+  },
+  {
+    "en": "Note: may permanently delete untracked files",
+    "zh": "注意：可能會永久刪除未追蹤的檔案"
+  },
+  {
+    "en": "Note: may permanently remove stashed changes",
+    "zh": "注意：可能會永久移除暫存的更改"
+  },
+  {
+    "en": "Note: may recursively force-remove files",
+    "zh": "注意：可能會遞迴強制刪除檔案"
+  },
+  {
+    "en": "Note: may recursively remove files",
+    "zh": "注意：可能會遞迴刪除檔案"
+  },
+  {
+    "en": "Note: will restart the computer",
+    "zh": "注意：將會重啟計算機"
+  },
+  {
+    "en": "Open in Claude Code on the web",
+    "zh": "在 Claude Code 網頁版中開啟"
+  },
+  {
+    "en": "Permission denied",
+    "zh": "權限被拒絕"
+  },
+  {
+    "en": "Pick which to remove",
+    "zh": "選擇要移除的內容"
+  },
+  {
+    "en": "Plan ready for review",
+    "zh": "方案已就緒，待審閱"
+  },
+  {
+    "en": "Please revise your plan",
+    "zh": "請修改您的方案"
+  },
+  {
+    "en": "Plugin name cannot be empty",
+    "zh": "外掛名稱不能為空"
+  },
+  {
+    "en": "Project local settings",
+    "zh": "專案本機設定"
+  },
+  {
+    "en": "Resume session",
+    "zh": "恢復工作階段"
+  },
+  {
+    "en": "Review and improve",
+    "zh": "審閱並改進"
+  },
+  {
+    "en": "Review and improve it",
+    "zh": "審閱並改進"
+  },
+  {
+    "en": "See ya!",
+    "zh": "回頭見！"
+  },
+  {
+    "en": "Session complete!",
+    "zh": "工作階段已完成！"
+  },
+  {
+    "en": "Session paused",
+    "zh": "工作階段已暫停"
+  },
+  {
+    "en": "Shared project settings",
+    "zh": "共享專案設定"
+  },
+  {
+    "en": "Shell details dismissed",
+    "zh": "Shell 詳情已關閉"
+  },
+  {
+    "en": "Should I proceed?",
+    "zh": "是否繼續？"
+  },
+  {
+    "en": "Sign-in complete",
+    "zh": "登入完成"
+  },
+  {
+    "en": "Sign-in failed",
+    "zh": "登入失敗"
+  },
+  {
+    "en": "Skill execution blocked by permission rules",
+    "zh": "技能執行被權限規則阻止"
+  },
+  {
+    "en": "Skills dialog dismissed",
+    "zh": "技能對話方塊已關閉"
+  },
+  {
+    "en": "Start fresh",
+    "zh": "重新開始"
+  },
+  {
+    "en": "Summarize the key points",
+    "zh": "總結要點"
+  },
+  {
+    "en": "Summarize up to here",
+    "zh": "總結到此處"
+  },
+  {
+    "en": "Tap to answer",
+    "zh": "輕點以回答"
+  },
+  {
+    "en": "Teach mode is not active. Call request_teach_access first.",
+    "zh": "教學模式未啟用。請先呼叫 request_teach_access。"
+  },
+  {
+    "en": "This field is required",
+    "zh": "此欄位為必填項"
+  },
+  {
+    "en": "This session only",
+    "zh": "僅此工作階段"
+  },
+  {
+    "en": "This session requires a trusted device. Run /login to enroll this device, then retry.",
+    "zh": "此工作階段需要受信任的裝置。請執行 /login 註冊本裝置，然後重試。"
+  },
+  {
+    "en": "Tool name cannot be empty",
+    "zh": "工具名稱不能為空"
+  },
+  {
+    "en": "Try rephrasing the request in a new session or change your model.",
+    "zh": "請嘗試在新工作階段中重新表述請求，或更換模型。"
+  },
+  {
+    "en": "Usage credits",
+    "zh": "使用額度"
+  },
+  {
+    "en": "Usage credits are required for long context",
+    "zh": "長上下文需要使用額度"
+  },
+  {
+    "en": "Viewing leader",
+    "zh": "正在檢視 leader"
+  },
+  {
+    "en": "Viewing teammate",
+    "zh": "正在檢視 teammate"
+  },
+  {
+    "en": "Voice connection failed. Check your network and try again.",
+    "zh": "語音連線失敗。請檢查網路後重試。"
+  },
+  {
+    "en": "Yes, remove",
+    "zh": "是，移除"
+  },
+  {
+    "en": "You can close this tab and return to Claude Code.",
+    "zh": "您可以關閉此標籤頁並返回 Claude Code。"
+  },
+  {
+    "en": "You can continue to work while the plan is generated remotely.",
+    "zh": "在遠端生成方案的同時，您可以繼續工作。"
+  },
+  {
+    "en": "You're now using extra usage",
+    "zh": "您正在使用額外用量"
+  },
+  {
+    "en": "You're now using usage credits",
+    "zh": "目前正在消耗使用額度"
+  },
+  {
+    "en": "You're now using your usage allocation",
+    "zh": "您正在使用您的使用配額"
+  },
+  {
+    "en": "You're out of extra usage",
+    "zh": "您的額外用量已用完"
+  },
+  {
+    "en": "You're out of usage credits",
+    "zh": "您的使用額度已用完"
+  },
+  {
+    "en": "Your group's usage limit is set to $0",
+    "zh": "您所在群組的使用額度上限已設為 $0"
+  },
+  {
+    "en": "Your seat type doesn't include extra usage",
+    "zh": "您的席位型別不包含額外用量"
+  },
+  {
+    "en": "Your seat type doesn't include usage",
+    "zh": "您的席位型別不包含用量"
+  },
+  {
+    "en": "Your seat type doesn't include usage credits",
+    "zh": "您的席位型別不包含使用額度"
+  },
+  {
+    "en": "Your session has expired for the trusted-device check. Run /login to re-authenticate, then retry.",
+    "zh": "您的工作階段在受信任裝置校驗時已過期。請執行 /login 重新認證，然後重試。"
+  },
+  {
+    "en": "Your session has expired. Please run /login to sign in again.",
+    "zh": "您的工作階段已過期。請執行 /login 重新登入。"
+  },
+  {
+    "en": "Your usage allocation has been disabled by your admin",
+    "zh": "您的使用配額已被管理員停用"
   }
 ]

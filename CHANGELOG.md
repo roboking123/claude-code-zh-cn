@@ -6,6 +6,62 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.9.0] - 2026-08-02
+
+### 新增
+
+- Linux x64 glibc 原生版 CLI Patch 首批支持 Claude Code 2.1.220；补丁器可从 ELF `.bun` section 提取、回写并校验内嵌 JavaScript。
+- Ubuntu CI 直接安装官方 Linux 原生包，验证 patch 后二进制可启动、版本正确且 11 项显示审计通过。
+
+### 修复
+
+- 纯 Linux 不再被安装器误提示为“请切换到 WSL”；Fedora/NVM 等原生安装会按 Linux 支持窗口处理。
+
+### 验证
+
+- `node-lief` 1.3.2 对官方 `@anthropic-ai/claude-code-linux-x64@2.1.220` 完成提取、1492 处替换、语法检查、ELF 回写和逐字 round-trip。
+- Linux ARM64 与 musl 尚未纳入已发布支持窗口。
+
+## [2.8.0] - 2026-08-02
+
+### 新增
+
+- **翻译表新增 112 条 UI 文案**（1895 → 2007），覆盖此前未翻译的面向用户界面文字，包括：
+  - 会话/认证消息：`Sign-in failed`、`Your session has expired. Please run /login to sign in again.`、`Login successful` 等
+  - 使用量/额度：`Usage credits`、`You're out of usage credits`、`Buy usage credits` 等
+  - 云会话/规划：`Cloud sessions`、`Plan ready for review`、`Open in Claude Code on the web` 等
+  - 权限安全注释：`Note: may discard uncommitted changes`、`Note: will restart the computer` 等
+  - Hook/工具反馈：`Hook cancelled`、`Blocked by hook`、`MCP tool returned an error` 等
+  - 引导提示：`Check the Claude Code changelog for updates`、`Let Claude decide`、`Available commands` 等
+
+### 验证
+
+- 对 2.1.211 binary 提取的 JS 做真实 patch 验证：110/112 命中，语法校验通过，代码逻辑字符串未被误伤。
+- translations-quality / translations-schema / doc-derived-counts / patch-cli 测试全绿。
+
+## [2.7.0] - 2026-07-31
+
+### 新增
+
+- **插件市场安装成为推荐的主力入口**（macOS / Linux / Windows 通用）：`claude plugin marketplace add` + `claude plugin install` 两条命令即可安装，不再需要 clone 仓库或运行本地安装脚本。(#201)
+- **spinner 动词/提示数据随插件包分发**：`verbs/zh-CN.json`、`tips/zh-CN.json`、`settings-overlay.json` 纳入 `plugin/` payload 同步（由 `sync-payload.sh` / `check-payload-sources.js` 守护）。纯插件市场安装后 session-start hook 可直接读取内置数据。
+- **跨平台增强安装 skill `zh-cn-setup`**：封装首次安装后需要人工确认的步骤——补齐缺失的 spinner 配置、检测并同步 CC Switch 通用配置（需授权）、报告 CLI patch 状态。不调用 `claude plugin install/update`，避免“插件装自己”循环。
+
+### 改进
+
+- **session-start hook 首次自补齐**：纯插件市场安装（没有 install 脚本预生成的 `.settings-overlay-cache.json`）时，hook 从插件内置 verbs/tips 现场构建 overlay，**只补齐 settings 中缺失的 spinner 配置，绝不覆盖用户已有的手动配置**。`build-overlay.js` 共享模块被 bash hook、PowerShell hook 和 setup skill 三处复用，单一数据源。
+- **Windows PowerShell hook 不再无条件改写 settings**：cache 路径保持原合并语义；无 cache 时走与 bash 版一致的“仅缺失补齐”逻辑。
+
+### 修复
+
+- 修正纯 `claude plugin install` 安装后 spinner 动词/提示为空（中文化残缺）的根因：数据未随插件包分发且无 cache。
+
+### 验证
+
+- 新增 `build-overlay` 模块单元测试（9 例）、setup.js 集成测试（7 例）、纯插件市场安装自补齐与“不覆盖已有配置”回归测试（2 例）。
+- 扩展 `plugin-payload` 测试覆盖 verbs/tips/settings-overlay 三对镜像。
+- 345 个测试全绿，preflight 全绿。
+
 ## [2.6.1] - 2026-07-26
 
 ### 修复

@@ -41,9 +41,11 @@ function compactError(error) {
 function parseArgs(argv) {
   const args = {
     config: defaultConfigPath,
+    failOnSkip: false,
     json: false,
     skipLatest: false,
     nativeMacosArm64: false,
+    nativeLinuxX64: false,
     nativeWindowsX64: false,
   };
 
@@ -71,8 +73,14 @@ function parseArgs(argv) {
       case "--skip-latest":
         args.skipLatest = true;
         break;
+      case "--fail-on-skip":
+        args.failOnSkip = true;
+        break;
       case "--native-macos-arm64":
         args.nativeMacosArm64 = true;
+        break;
+      case "--native-linux-x64":
+        args.nativeLinuxX64 = true;
         break;
       case "--native-windows-x64":
         args.nativeWindowsX64 = true;
@@ -264,6 +272,9 @@ function nativeSupportConfig(config, args) {
   if (args.nativeWindowsX64) {
     return config.support?.windowsNativeExperimental || null;
   }
+  if (args.nativeLinuxX64) {
+    return config.support?.linuxNativeExperimental || null;
+  }
   if (args.nativeMacosArm64) {
     return config.support?.macosNativeExperimental || null;
   }
@@ -374,7 +385,7 @@ function downloadPackage(packageName, version, packagesDir) {
 
 function resolvePackageName(config, args, version) {
   const nativeConfig = nativeSupportConfig(config, args);
-  if ((args.nativeMacosArm64 || args.nativeWindowsX64) && nativeConfig?.packageName) {
+  if ((args.nativeMacosArm64 || args.nativeLinuxX64 || args.nativeWindowsX64) && nativeConfig?.packageName) {
     const floorComparison = nativeConfig.floor ? compareSemver(version, nativeConfig.floor) : null;
     const isKnownRepresentative = (nativeConfig.representatives || []).map(String).includes(String(version));
     if ((floorComparison !== null && floorComparison >= 0) || isKnownRepresentative) {
@@ -473,14 +484,17 @@ function checkNativeDeps() {
 }
 
 function runNativeVerification(config, args, version, packageDir, kind) {
-  if (!args.nativeMacosArm64 && !args.nativeWindowsX64) {
+  if (!args.nativeMacosArm64 && !args.nativeLinuxX64 && !args.nativeWindowsX64) {
     return nativeSkipResult(version, kind, "native verification not enabled");
   }
 
-  const expectedPlatform = args.nativeWindowsX64 ? "win32-x64" : "darwin-arm64";
+  const expectedPlatform = args.nativeWindowsX64 ? "win32-x64" : args.nativeLinuxX64 ? "linux-x64" : "darwin-arm64";
   if (currentNativePlatform() !== expectedPlatform) {
     if (args.nativeWindowsX64) {
       return nativeSkipResult(version, kind, "native verification requires Windows x64");
+    }
+    if (args.nativeLinuxX64) {
+      return nativeSkipResult(version, kind, "native verification requires Linux x64");
     }
     return nativeSkipResult(version, kind, "native verification requires macOS arm64");
   }
@@ -548,7 +562,7 @@ function runNativeVerification(config, args, version, packageDir, kind) {
       cwd: repoRoot,
       stdio: ["ignore", "ignore", "pipe"],
     });
-    if (!args.nativeWindowsX64) {
+    if (process.platform === "darwin" && args.nativeMacosArm64) {
       execFile("codesign", ["--verify", "--strict", "--verbose=4", patchedBinary], {
         cwd: repoRoot,
         stdio: ["ignore", "ignore", "pipe"],
@@ -598,7 +612,7 @@ function runNativeVerification(config, args, version, packageDir, kind) {
         detect: detectOutput.split(":")[0],
         extract: "ok",
         repack: "ok",
-        codeSignature: "ok",
+        codeSignature: args.nativeLinuxX64 ? "not-required" : "ok",
         versionOutput,
       },
       ...(displayAudit ? { displayAudit } : {}),
@@ -1067,7 +1081,7 @@ function main() {
     printHuman(payload);
   }
 
-  process.exit(payload.summary.fail > 0 ? 1 : 0);
+  process.exit(payload.summary.fail > 0 || (args.failOnSkip && payload.summary.skip > 0) ? 1 : 0);
 }
 
 main();

@@ -312,6 +312,115 @@ test("Windows session-start hook repairs settings from cached overlay", () => {
   assert.match(script, /Repair-SettingsFromCache/);
 });
 
+test("pure marketplace install (no cache) self-seeds spinner settings from bundled data", () => {
+  // 纯 `claude plugin install` 安装：没有 install 脚本预生成 .settings-overlay-cache.json。
+  // session-start hook 应从 plugin 内置的 verbs/tips/settings-overlay 现场补齐缺失的 spinner 配置。
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-marketplace-nocache-"));
+  const home = path.join(tmp, "home");
+  const pluginRoot = path.join(tmp, "cache", "claude-code-zh-cn", "2.6.1");
+  const fakeBin = path.join(tmp, "bin");
+  const settingsFile = path.join(home, ".claude", "settings.json");
+
+  copyTree(path.join(repoRoot, "plugin"), pluginRoot);
+  fs.chmodSync(path.join(pluginRoot, "patch-cli.sh"), 0o755);
+  fs.chmodSync(path.join(pluginRoot, "compute-patch-revision.sh"), 0o755);
+  fs.mkdirSync(fakeBin, { recursive: true });
+  fs.mkdirSync(path.dirname(settingsFile), { recursive: true });
+  fs.writeFileSync(path.join(fakeBin, "claude"), "#!/usr/bin/env bash\nexit 0\n");
+  fs.chmodSync(path.join(fakeBin, "claude"), 0o755);
+
+  // 关键：没有 .settings-overlay-cache.json（模拟纯 marketplace 安装）
+  assert.equal(
+    fs.existsSync(path.join(pluginRoot, ".settings-overlay-cache.json")),
+    false,
+    "test fixture must not ship a cache file"
+  );
+  // 但 plugin 内置了 verbs/tips（块1 同步进来）
+  assert.equal(fs.existsSync(path.join(pluginRoot, "verbs", "zh-CN.json")), true);
+  assert.equal(fs.existsSync(path.join(pluginRoot, "tips", "zh-CN.json")), true);
+
+  fs.writeFileSync(settingsFile, JSON.stringify({ theme: "dark" }) + "\n");
+
+  const result = spawnSync("bash", [hookPath], {
+    cwd: repoRoot,
+    env: {
+      ...process.env,
+      HOME: home,
+      CLAUDE_PLUGIN_ROOT: pluginRoot,
+      PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
+      GIT_TERMINAL_PROMPT: "0",
+    },
+    input: "\n",
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+
+  const repaired = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
+  assert.equal(repaired.language, "Chinese");
+  assert.equal(repaired.spinnerTipsEnabled, true);
+  assert.ok(Array.isArray(repaired.spinnerVerbs), "spinnerVerbs should be seeded as an array");
+  assert.ok(repaired.spinnerVerbs.length >= 100, "spinnerVerbs should contain the bundled verbs");
+  assert.ok(
+    Array.isArray(repaired.spinnerTipsOverride?.tips),
+    "spinnerTipsOverride.tips should be seeded as an array"
+  );
+  assert.ok(repaired.spinnerTipsOverride.tips.length >= 40, "spinnerTipsOverride.tips should contain bundled tips");
+  assert.equal(repaired.spinnerTipsOverride.excludeDefault, true);
+  // 其它配置保留
+  assert.equal(repaired.theme, "dark");
+});
+
+test("self-seed does not overwrite user's existing spinner config", () => {
+  // 用户已有自定义 spinnerVerbs → hook 必须保留，只补齐缺失的非冲突 key。
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-marketplace-preserve-"));
+  const home = path.join(tmp, "home");
+  const pluginRoot = path.join(tmp, "cache", "claude-code-zh-cn", "2.6.1");
+  const fakeBin = path.join(tmp, "bin");
+  const settingsFile = path.join(home, ".claude", "settings.json");
+
+  copyTree(path.join(repoRoot, "plugin"), pluginRoot);
+  fs.chmodSync(path.join(pluginRoot, "patch-cli.sh"), 0o755);
+  fs.mkdirSync(fakeBin, { recursive: true });
+  fs.mkdirSync(path.dirname(settingsFile), { recursive: true });
+  fs.writeFileSync(path.join(fakeBin, "claude"), "#!/usr/bin/env bash\nexit 0\n");
+  fs.chmodSync(path.join(fakeBin, "claude"), 0o755);
+
+  const userVerbs = ["我的自定义动词"];
+  fs.writeFileSync(
+    settingsFile,
+    JSON.stringify({
+      spinnerVerbs: userVerbs,
+      theme: "dark",
+    }) + "\n"
+  );
+
+  const result = spawnSync("bash", [hookPath], {
+    cwd: repoRoot,
+    env: {
+      ...process.env,
+      HOME: home,
+      CLAUDE_PLUGIN_ROOT: pluginRoot,
+      PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
+      GIT_TERMINAL_PROMPT: "0",
+    },
+    input: "\n",
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+
+  const repaired = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
+  // 用户已有的 spinnerVerbs 必须原样保留，绝不被内置数据覆盖
+  assert.deepEqual(repaired.spinnerVerbs, userVerbs);
+  // 缺失的 key 仍被补齐
+  assert.equal(repaired.language, "Chinese");
+  assert.equal(repaired.spinnerTipsEnabled, true);
+  assert.equal(repaired.theme, "dark");
+});
+
 test("Windows session-start hook never rewrites the running native exe and records a safe manual handoff", () => {
   const script = fs.readFileSync(path.join(repoRoot, "plugin", "hooks", "session-start.ps1"), "utf8");
 
@@ -852,7 +961,11 @@ test("standalone session-start announces the latest release without mutating the
     "main",
     "release checks must not checkout a tag in the source repo worktree"
   );
-  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(home, ".claude", "settings.json"), "utf8")), {});
+  // 设置的 spinner 自补齐是预期副作用（纯插件安装无 cache 时从内置数据补齐）；
+  // 这两个测试关注的是 update-check 不改插件文件、不跑安装器，不约束 settings 形态。
+  const seededSettings = JSON.parse(fs.readFileSync(path.join(home, ".claude", "settings.json"), "utf8"));
+  assert.equal(seededSettings.language, "Chinese");
+  assert.ok(Array.isArray(seededSettings.spinnerVerbs) && seededSettings.spinnerVerbs.length >= 100);
   assert.match(
     fs.readFileSync(path.join(pluginRoot, ".last-update-status"), "utf8").trim(),
     /^available v2\.0\.1 \d+$/
@@ -913,7 +1026,10 @@ test("standalone release check never executes a broken untagged installer from t
     "2.0.0",
     "release notification must leave the installed plugin untouched"
   );
-  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(home, ".claude", "settings.json"), "utf8")), {});
+  // 设置的 spinner 自补齐是预期副作用；此测试关注 update-check 行为，不约束 settings 形态。
+  const seededSettings = JSON.parse(fs.readFileSync(path.join(home, ".claude", "settings.json"), "utf8"));
+  assert.equal(seededSettings.language, "Chinese");
+  assert.ok(Array.isArray(seededSettings.spinnerVerbs) && seededSettings.spinnerVerbs.length >= 100);
   assert.match(
     fs.readFileSync(path.join(pluginRoot, ".last-update-status"), "utf8").trim(),
     /^available v2\.0\.1 \d+$/,
@@ -1139,6 +1255,7 @@ printf '1'
       HOME: home,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
       GIT_TERMINAL_PROMPT: "0",
     },
@@ -1193,6 +1310,7 @@ printf '1'
       HOME: home,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
       GIT_TERMINAL_PROMPT: "0",
     },
@@ -1203,6 +1321,57 @@ printf '1'
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(fs.readFileSync(fakeBinary, "utf8"), /PATCHED-EXPERIMENTAL/);
   assert.match(fs.readFileSync(markerFile, "utf8").trim(), /^native\|2\.1\.123\|[a-f0-9]{64}\|/);
+  assert.doesNotThrow(() => JSON.parse(result.stdout));
+});
+
+test("session-start patches verified Linux x64 without provisional fallback", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-linux-native-verified-"));
+  const home = path.join(tmp, "home");
+  const pluginRoot = path.join(home, ".claude", "plugins", "claude-code-zh-cn");
+  const fakeBin = path.join(tmp, "bin");
+  const fakeBinary = path.join(tmp, "claude-native");
+  const markerFile = path.join(pluginRoot, ".patched-version");
+
+  fs.mkdirSync(pluginRoot, { recursive: true });
+  fs.mkdirSync(fakeBin, { recursive: true });
+  copyTree(path.join(repoRoot, "plugin"), pluginRoot);
+  const supportPath = path.join(pluginRoot, "support-window.json");
+  const support = JSON.parse(fs.readFileSync(supportPath, "utf8"));
+  support.linuxNativeExperimental = {
+    floor: "2.1.220",
+    ceiling: "2.1.220",
+    versions: ["2.1.220"],
+    platform: "linux-x64",
+  };
+  fs.writeFileSync(supportPath, `${JSON.stringify(support, null, 2)}\n`);
+  writeFakeNativeHelper(path.join(pluginRoot, "bun-binary-io.js"));
+  fs.writeFileSync(
+    path.join(pluginRoot, "patch-cli.sh"),
+    `#!/usr/bin/env bash\nprintf '\nPATCHED-LINUX\n' >> "$1"\nprintf '1'\n`,
+    { mode: 0o755 }
+  );
+  fs.writeFileSync(fakeBinary, nativeShellFixture("2.1.220"), { mode: 0o755 });
+  fs.symlinkSync(fakeBinary, path.join(fakeBin, "claude"));
+
+  const result = spawnSync("bash", [hookPath], {
+    cwd: repoRoot,
+    env: {
+      ...process.env,
+      HOME: home,
+      CLAUDE_PLUGIN_ROOT: pluginRoot,
+      PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_NATIVE_PLATFORM: "linux-x64",
+      ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
+      GIT_TERMINAL_PROMPT: "0",
+    },
+    input: "\n",
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(fs.readFileSync(fakeBinary, "utf8"), /PATCHED-LINUX/);
+  assert.match(fs.readFileSync(markerFile, "utf8").trim(), /^native\|2\.1\.220\|[a-f0-9]{64}\|[^|]+$/);
+  assert.doesNotMatch(fs.readFileSync(markerFile, "utf8"), /provisional/);
   assert.doesNotThrow(() => JSON.parse(result.stdout));
 });
 
@@ -1269,6 +1438,7 @@ printf '1'
       HOME: home,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
       GIT_TERMINAL_PROMPT: "0",
     },
@@ -1290,6 +1460,7 @@ test("session-start restores native backup when runtime self-check fails after r
   const fakeBinary = path.join(tmp, "claude-native");
   const backupBinary = `${fakeBinary}.zh-cn-backup`;
   const markerFile = path.join(pluginRoot, ".patched-version");
+  const repackedInodeFile = path.join(tmp, "repacked-inode");
   const cleanBackup = nativeShellFixture("2.1.175", "CLEAN BACKUP");
 
   fs.mkdirSync(pluginRoot, { recursive: true });
@@ -1318,6 +1489,7 @@ if (cmd === "detect") {
 } else if (cmd === "extract") {
   fs.copyFileSync(process.argv[3], process.argv[4]);
 } else if (cmd === "repack") {
+  fs.writeFileSync(${JSON.stringify(repackedInodeFile)}, String(fs.statSync(process.argv[3]).ino));
   fs.writeFileSync(process.argv[3], "#!/usr/bin/env bash\\nkill -9 $$\\n");
   fs.chmodSync(process.argv[3], 0o755);
 }
@@ -1347,6 +1519,7 @@ printf '1'
       HOME: home,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
       GIT_TERMINAL_PROMPT: "0",
     },
@@ -1356,6 +1529,11 @@ printf '1'
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.equal(fs.readFileSync(fakeBinary, "utf8"), cleanBackup);
+  assert.notEqual(
+    fs.statSync(fakeBinary).ino,
+    Number(fs.readFileSync(repackedInodeFile, "utf8")),
+    "rollback must atomically replace the mutated native inode"
+  );
   assert.equal(fs.readFileSync(markerFile, "utf8").trim(), "native|2.1.175|stale|old-revision");
   assert.doesNotThrow(() => JSON.parse(result.stdout));
 });

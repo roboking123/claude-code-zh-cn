@@ -87,6 +87,7 @@ function nativeSupportLists(support) {
   for (const key of [
     "macosNativeOfficialInstallerExperimental",
     "macosNativeExperimental",
+    "linuxNativeExperimental",
     "windowsNativeExperimental",
   ]) {
     const entry = support?.[key];
@@ -103,14 +104,24 @@ function nativeSupportLists(support) {
   return lists;
 }
 
-function nativePlatformForTarget(target) {
-  if (process.platform === "win32" || /\.exe$/i.test(String(target || ""))) {
+function nativePlatformForTarget(
+  target,
+  runtimePlatform = process.platform,
+  runtimeArch = process.arch,
+  runtimeLibc = ""
+) {
+  if (runtimePlatform === "linux") {
+    const report = runtimeLibc ? null : process.report?.getReport?.();
+    const libc = runtimeLibc || (report?.header?.glibcVersionRuntime ? "glibc" : "musl");
+    return `linux-${runtimeArch}${libc === "glibc" ? "" : "-musl"}`;
+  }
+  if (runtimePlatform === "win32" || /\.exe$/i.test(String(target || ""))) {
     return "win32-x64";
   }
-  if (process.platform === "darwin") {
-    return "darwin-arm64";
+  if (runtimePlatform === "darwin") {
+    return `darwin-${runtimeArch}`;
   }
-  return process.platform || "";
+  return runtimePlatform || "";
 }
 
 function isSupportedNativeVersion(version, support, platform = "") {
@@ -495,6 +506,7 @@ function readCcSwitchCommonConfig(homeDir) {
  * @param {string} [options.homeDir]
  * @param {string} [options.pluginRoot]
  * @param {string} [options.claudePath]
+ * @param {string} [options.nativePlatform]
  * @param {string} [options.runtimeError]
  * @param {boolean} [options.json]
  * @param {boolean} [options.color]
@@ -743,7 +755,7 @@ function runDoctor(options = {}) {
       add("launcher", "npm 启动前自修复", "ok", "launcher 已在 PATH 最前");
     }
   } else if (kind === "native-bun" && target) {
-    const nativePlatform = nativePlatformForTarget(target);
+    const nativePlatform = options.nativePlatform || nativePlatformForTarget(target);
     const supported = isSupportedNativeVersion(cliVersion, support, nativePlatform);
     const liefOk = checkNodeLief(bunBinaryIoPath);
     if (!supported && marker.kind === "native" && marker.version === cliVersion && marker.provisional) {
@@ -773,9 +785,14 @@ function runDoctor(options = {}) {
       recommendations.push(UNPUBLISHED_WINDOW_GUIDANCE);
     } else if (!liefOk) {
       layer4Status = "needs-deps";
-      layer4Detail = "已验证版本，但缺少 node-lief";
+      const liefRequirement = nativePlatform.startsWith("linux-") ? "node-lief >= 1.3.0" : "node-lief";
+      layer4Detail = `已验证版本，但缺少 ${liefRequirement}`;
       add("layer4", "Layer 4（UI 硬编码）", "fail", layer4Detail);
-      recommendations.push("运行：npm install -g node-lief");
+      recommendations.push(
+        nativePlatform.startsWith("linux-")
+          ? "运行：npm install -g node-lief@^1.3.0"
+          : "运行：npm install -g node-lief"
+      );
       recommendations.push("然后重新运行 ./install.sh");
     } else if (marker.kind === "native" && marker.version === cliVersion) {
       const currentHash = nativeBinaryHash(bunBinaryIoPath, target);
@@ -943,4 +960,6 @@ module.exports = {
   STABLE_PINNED_VERSION,
   NPM_RESIDUE_PROBES,
   classifyRuntimeError,
+  nativePlatformForTarget,
+  isSupportedNativeVersion,
 };

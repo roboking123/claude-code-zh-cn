@@ -280,12 +280,12 @@ function Test-NativeMarkerCurrent($Marker, $Version, $Hash, $Revision, $Mode, $P
 }
 
 function Repair-SettingsFromCache {
-    if (-not (Test-Path $SettingsOverlayCacheFile)) { return }
-
     $settingsDir = Split-Path -Parent $SettingsFile
     New-Item -Force -ItemType Directory -Path $settingsDir | Out-Null
 
-    $code = @'
+    # 舊安裝路徑：install.ps1 會預生成 .settings-overlay-cache.json，直接合並。
+    if (Test-Path $SettingsOverlayCacheFile) {
+        $code = @'
 const fs=require("fs");
 const settingsFile=process.argv[2];
 const overlayFile=process.argv[3];
@@ -301,7 +301,16 @@ const merged=deepMerge(settings,overlay);
 const changed=pluginKeys.some((key)=>JSON.stringify(settings[key])!==JSON.stringify(merged[key]));
 if(changed){fs.writeFileSync(settingsFile,JSON.stringify(merged,null,2)+"\n")}
 '@
-    Invoke-JsScript -Code $code -Args @($SettingsFile, $SettingsOverlayCacheFile) | Out-Null
+        Invoke-JsScript -Code $code -Args @($SettingsFile, $SettingsOverlayCacheFile) | Out-Null
+        return
+    }
+
+    # 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
+    # 從 plugin 內建的 verbs/tips/settings-overlay 資料現場構建 overlay，
+    # 只補齊 settings 裡確實缺失的 spinner 配置，絕不覆蓋使用者已有的手動配置。
+    $overlayHelper = Join-Path $PluginRoot "scripts\build-overlay.js"
+    if (-not (Test-Path $overlayHelper)) { return }
+    node $overlayHelper ensure-settings $SettingsFile $PluginRoot 2>$null | Out-Null
 }
 
 function Invoke-NativePatch($Target) {

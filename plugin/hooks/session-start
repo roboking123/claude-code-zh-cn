@@ -217,17 +217,33 @@ native_platform() {
         return
     fi
 
-    case "$(uname -s 2>/dev/null)-$(uname -m 2>/dev/null)" in
+    local system_arch linux_arch=""
+    system_arch="$(uname -s 2>/dev/null)-$(uname -m 2>/dev/null)"
+    case "$system_arch" in
         Darwin-arm64|Darwin-aarch64)
             printf 'darwin-arm64'
+            return
+            ;;
+        Linux-x86_64|Linux-amd64)
+            linux_arch="x64"
+            ;;
+        Linux-arm64|Linux-aarch64)
+            linux_arch="arm64"
             ;;
         MINGW64_NT-*|MSYS_NT-*|CYGWIN_NT-*)
             printf 'win32-x64'
+            return
             ;;
         *)
-            printf ''
+            return
             ;;
     esac
+
+    if node -e 'const r=process.report&&process.report.getReport?process.report.getReport():null;process.exit(r&&r.header&&r.header.glibcVersionRuntime?0:1)' >/dev/null 2>&1; then
+        printf 'linux-%s' "$linux_arch"
+    else
+        printf 'linux-%s-musl' "$linux_arch"
+    fi
 }
 
 is_supported_native_version() {
@@ -236,6 +252,7 @@ is_supported_native_version() {
     local support_file="$PLUGIN_ROOT/support-window.json"
 
     if [ ! -f "$support_file" ]; then
+        [ "$platform" = "darwin-arm64" ] || return 1
         case "${version:-}" in
             2.1.110|2.1.111|2.1.112)
                 return 0
@@ -256,6 +273,7 @@ const versions = [];
 for (const key of [
   "macosNativeOfficialInstallerExperimental",
   "macosNativeExperimental",
+  "linuxNativeExperimental",
   "windowsNativeExperimental",
 ]) {
   const entry = data[key];
@@ -313,6 +331,22 @@ for (const key of [
 
 process.exit(1);
 NODE
+}
+
+replace_native_binary_from_file() {
+    local source_path="$1"
+    local binary_path="$2"
+    local replacement_path
+
+    replacement_path="$(mktemp "${binary_path}.zh-cn-restore.XXXXXX" 2>/dev/null || true)"
+    [ -n "${replacement_path:-}" ] || return 1
+
+    if cp -p "$source_path" "$replacement_path" 2>/dev/null && mv -f "$replacement_path" "$binary_path" 2>/dev/null; then
+        return 0
+    fi
+
+    rm -f "$replacement_path" 2>/dev/null || true
+    return 1
 }
 
 native_marker_is_current() {
@@ -476,11 +510,12 @@ write_update_status() {
 }
 
 repair_settings_from_cache() {
-    [ -f "$SETTINGS_OVERLAY_CACHE_FILE" ] || return 0
-
     mkdir -p "$(dirname "$SETTINGS_FILE")" 2>/dev/null || return 0
 
-    ZH_CN_SETTINGS="$SETTINGS_FILE" ZH_CN_OVERLAY_CACHE="$SETTINGS_OVERLAY_CACHE_FILE" node <<'NODE' >/dev/null 2>&1 || true
+    # 舊安裝路徑：install.sh 會預生成 .settings-overlay-cache.json，直接合並。
+    # 這是相容路徑；merge 時用 overlay 的值（與歷史行為一致）。
+    if [ -f "$SETTINGS_OVERLAY_CACHE_FILE" ]; then
+        ZH_CN_SETTINGS="$SETTINGS_FILE" ZH_CN_OVERLAY_CACHE="$SETTINGS_OVERLAY_CACHE_FILE" node <<'NODE' >/dev/null 2>&1 || true
 const fs = require("fs");
 
 const settingsFile = process.env.ZH_CN_SETTINGS;
@@ -521,6 +556,15 @@ const merged = deepMerge(base, overlay);
 
 fs.writeFileSync(settingsFile, JSON.stringify(merged, null, 2) + "\n");
 NODE
+        return 0
+    fi
+
+    # 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
+    # 從 plugin 內建的 verbs/tips/settings-overlay 資料現場構建 overlay，
+    # 只補齊 settings 裡確實缺失的 spinner 配置，絕不覆蓋使用者已有的手動配置。
+    local overlay_helper="$PLUGIN_ROOT/scripts/build-overlay.js"
+    [ -f "$overlay_helper" ] || return 0
+    CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" node "$overlay_helper" ensure-settings "$SETTINGS_FILE" >/dev/null 2>&1 || true
 }
 
 find_real_claude_binary() {
@@ -723,7 +767,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                 # 同版本時恢復 backup 保證乾淨基底；版本變化時重新整理 backup 為目前版本
                 BACKUP_READY=false
                 if [ -f "$backup_path" ] && [ -n "${CURRENT_VERSION:-}" ] && [ "${CURRENT_VERSION:-}" = "${backup_version:-}" ]; then
-                    if cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null; then
+                    if replace_native_binary_from_file "$backup_path" "$NATIVE_BINARY" 2>/dev/null; then
                         BACKUP_READY=true
                     fi
                 else
@@ -778,18 +822,15 @@ if [ -n "$NATIVE_BINARY" ]; then
                                         AUTO_PATCH_MSG="（已自動 patch ${PATCH_COUNT} 處硬編碼文字，啟動自檢通過）"
                                     fi
                                 else
-                                    cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
+                                    if ! replace_native_binary_from_file "$backup_path" "$NATIVE_BINARY" 2>/dev/null; then
+                                        AUTO_PATCH_MSG="（自動 patch 失敗且無法恢復；原始備份已保留，請重新執行安裝器）"
+                                    fi
                                 fi
                                 ;;
                             *)
                                 # patch-cli 未寫回二進位制；保持乾淨英文版本可用。
                                 ;;
                         esac
-                    else
-                        # 提取失敗不觸碰二進位制；保留目前英文版本。
-                        if [ -f "$backup_path" ]; then
-                            cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
-                        fi
                     fi
                 fi
                 rm -f "$tmp_js" "$status_file"
@@ -852,10 +893,10 @@ repair_settings_from_cache
 
 # Skill/外掛命令說明增量漢化（背景非同步，不阻塞 hook 輸出；新裝項下次啟動生效）
 # 預設停用：會消耗使用者 token/額度 + 修改本機檔案，需使用者顯式 ZH_CN_SKILL_I18N_ENABLE=1 開啟
-# HOOK=1 跳過：翻譯子程序（translate spawn 的 claude CLI）不再觸發同一 hook（防遞迴，review #3）
+# HOOK=1 跳過：翻譯子程式（translate spawn 的 claude CLI）不再觸發同一 hook（防遞迴，review #3）
 if [ "${ZH_CN_SKILL_I18N_ENABLE:-0}" = "1" ] && [ "${ZH_CN_SKILL_I18N_HOOK:-0}" != "1" ] && [ -x "$PLUGIN_ROOT/skill-i18n/translate-skills.sh" ]; then
-    # `( ) &` subshell 自身是新程序組的 leader，subshell PID == PGID。
-    # kill -- -PID 殺整個程序組（subshell + node + claude），25s 逾時真的能停（review #3）。
+    # `( ) &` subshell 自身是新程式組的 leader，subshell PID == PGID。
+    # kill -- -PID 殺整個程式組（subshell + node + claude），25s 逾時真的能停（review #3）。
     (
         ZH_CN_SKILL_I18N_HOOK=1 \
         CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" \
