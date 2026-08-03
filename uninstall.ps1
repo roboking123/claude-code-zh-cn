@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/env pwsh
-# claude-code-zh-cn Windows 卸载脚本 (PowerShell)
-# 精准移除插件注入的设置，保留用户其他配置
-# 移植自 uninstall.sh — 适配 Windows 原生环境
+# claude-code-zh-cn Windows 解除安裝腳本 (PowerShell)
+# 精準移除外掛注入的設定，保留使用者其他配置
+# 移植自 uninstall.sh — 適配 Windows 原生環境
 
 param(
     [switch]$SkipBanner = $false
@@ -27,7 +27,7 @@ $OfficialMarketplaceName = "claude-code-zh-cn"
 
 if (-not $SkipBanner) {
     Write-Host ""
-    Write-Host "=== Claude Code 中文本地化插件 卸载 ===" -ForegroundColor Blue
+    Write-Host "=== Claude Code 中文在地化外掛 解除安裝 ===" -ForegroundColor Blue
     Write-Host ""
 }
 
@@ -46,7 +46,7 @@ function Remove-LauncherFile {
     }
 
     if (-not $SkipBanner) {
-        Write-Host "检测到自定义 launcher，未自动删除：$Target" -ForegroundColor Yellow
+        Write-Host "偵測到自訂 launcher，未自動刪除：$Target" -ForegroundColor Yellow
     }
     return $false
 }
@@ -59,7 +59,7 @@ if (Remove-LauncherFile $LauncherFile) {
 if (Remove-LauncherFile $LauncherPs1File) {
     $removedLauncher = $true
 }
-# 清理空目录
+# 清理空目錄
 if (Test-Path $LauncherBinDir) {
     $remaining = Get-ChildItem $LauncherBinDir -ErrorAction SilentlyContinue
     if (-not $remaining) {
@@ -70,14 +70,14 @@ if ($removedLauncher) {
     Write-Host "已移除 launcher" -ForegroundColor Green
 }
 
-# 2. 从用户 PATH 中移除 launcher 目录
+# 2. 從使用者 PATH 中移除 launcher 目錄
 $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 if ((-not (Test-Path $LauncherBinDir)) -and $currentUserPath -like "*$LauncherBinDir*") {
     $newPath = ($currentUserPath -split ';' | Where-Object {
         $_ -ne $LauncherBinDir -and $_ -ne "$LauncherBinDir\"
     }) -join ';'
     [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-    Write-Host "已从用户 PATH 移除 launcher 目录" -ForegroundColor Green
+    Write-Host "已從使用者 PATH 移除 launcher 目錄" -ForegroundColor Green
 }
 
 function Find-RealClaudeForPlugin {
@@ -128,15 +128,15 @@ function Remove-OfficialPluginRegistration {
     try { & $claudeCli plugin marketplace remove --scope user $OfficialMarketplaceName *> $null } catch {}
 
     if (Test-OfficialRegistrationAbsent $claudeCli) {
-        Write-Host "官方插件注册已移除并验证" -ForegroundColor Green
+        Write-Host "官方外掛註冊已移除並驗證" -ForegroundColor Green
     } else {
-        Write-Host "官方插件 CLI 卸载未能完整验证；将继续精确清理本插件设置，不影响其他插件。" -ForegroundColor Yellow
+        Write-Host "官方外掛 CLI 解除安裝未能完整驗證；將繼續精確清理本外掛設定，不影響其他外掛。" -ForegroundColor Yellow
     }
 }
 
 Remove-OfficialPluginRegistration
 
-# 3. 从 settings.json 精准移除插件注入的设置项
+# 3. 從 settings.json 精準移除外掛注入的設定項
 if (Test-Path $SettingsFile) {
     if (Get-Command node -ErrorAction SilentlyContinue) {
         $env:ZH_CN_SETTINGS = $SettingsFile
@@ -262,7 +262,7 @@ if(changed) fs.writeFileSync(settingsFile,JSON.stringify(settings,null,2)+'\n');
 "@
         Remove-Item Env:\ZH_CN_SETTINGS -ErrorAction SilentlyContinue
         Remove-Item Env:\ZH_CN_PLUGIN_DST -ErrorAction SilentlyContinue
-        Write-Host "已从 settings.json 移除中文设置（保留其他配置）" -ForegroundColor Green
+        Write-Host "已從 settings.json 移除中文設定（保留其他配置）" -ForegroundColor Green
     } elseif (Get-Command jq -ErrorAction SilentlyContinue) {
         $tempFile = "$SettingsFile.tmp"
         $jqFilter = @'
@@ -329,28 +329,28 @@ def clean_hook_entry($legacyLocalRegistration):
 '@
         jq --arg pluginRoot $PluginDst $jqFilter $SettingsFile | Out-File -FilePath $tempFile -Encoding utf8 -NoNewline
         Move-Item $tempFile $SettingsFile -Force
-        Write-Host "已从 settings.json 移除中文设置（保留其他配置）" -ForegroundColor Green
+        Write-Host "已從 settings.json 移除中文設定（保留其他配置）" -ForegroundColor Green
     } else {
-        Write-Host "请手动编辑 $SettingsFile 移除以下字段：" -ForegroundColor Yellow
+        Write-Host "請手動編輯 $SettingsFile 移除以下欄位：" -ForegroundColor Yellow
         Write-Host "  - language"
         Write-Host "  - spinnerTipsEnabled"
         Write-Host "  - spinnerTipsOverride"
         Write-Host "  - spinnerVerbs"
-        Write-Host "  - 本插件写入的 hooks / enabledPlugins / extraKnownMarketplaces 项"
+        Write-Host "  - 本外掛寫入的 hooks / enabledPlugins / extraKnownMarketplaces 項"
     }
 }
 
-# 4. 还原 cli.js（从备份恢复）
+# 4. 還原 cli.js（從備份恢復）
 $RESTORED = $false
 
-# 试 npm 全局 claude
+# 試 npm 全域 claude
 $claudeBin = (Get-Command claude -ErrorAction SilentlyContinue).Source
 if ($claudeBin) {
-    # 试原生二进制备份
+    # 試原生二進位制備份
     if (Test-Path "${claudeBin}.zh-cn-backup") {
         Copy-Item "${claudeBin}.zh-cn-backup" $claudeBin -Force
         Remove-Item "${claudeBin}.zh-cn-backup" -Force
-        Write-Host "已还原二进制" -ForegroundColor Green
+        Write-Host "已還原二進位制" -ForegroundColor Green
         $RESTORED = $true
     }
 }
@@ -373,34 +373,34 @@ if (-not $RESTORED) {
     if ($cliFile -and (Test-Path "${cliFile}.zh-cn-backup")) {
         Copy-Item "${cliFile}.zh-cn-backup" $cliFile -Force
         Remove-Item "${cliFile}.zh-cn-backup" -Force
-        Write-Host "已还原 cli.js" -ForegroundColor Green
+        Write-Host "已還原 cli.js" -ForegroundColor Green
     } elseif ($cliFile -and (Test-Path $cliFile)) {
-        Write-Host "cli.js 没有备份文件，建议运行以下命令还原：" -ForegroundColor Yellow
+        Write-Host "cli.js 沒有備份檔案，建議執行以下命令還原：" -ForegroundColor Yellow
         Write-Host "  npm install -g @anthropic-ai/claude-code"
     }
 }
 
-# 还原 skill/插件命令说明为英文（必须在移除插件目录前，否则 restore.js 已不存在）
+# 還原 skill/外掛命令說明為英文（必須在移除外掛目錄前，否則 restore.js 已不存在）
 if ((Test-Path "$PluginDst/skill-i18n/restore.js") -and (Get-Command node -ErrorAction SilentlyContinue)) {
-    Write-Host "还原 skill/插件命令说明为英文..." -ForegroundColor Blue
+    Write-Host "還原 skill/外掛命令說明為英文..." -ForegroundColor Blue
     & node "$PluginDst/skill-i18n/restore.js" --all 2>$null | Out-Null
 }
 
-# 5. 移除插件目录
+# 5. 移除外掛目錄
 if (Test-Path $PluginDst) {
     Remove-Item -Recurse -Force $PluginDst
-    Write-Host "已移除插件目录" -ForegroundColor Green
+    Write-Host "已移除外掛目錄" -ForegroundColor Green
 }
 
-# 6. 清理 settings.json 备份
+# 6. 清理 settings.json 備份
 $backupPattern = "$env:USERPROFILE\.claude\settings.json.zh-cn-backup.*"
 Get-ChildItem $backupPattern -ErrorAction SilentlyContinue | Remove-Item -Force
 if ((Get-ChildItem $backupPattern -ErrorAction SilentlyContinue).Count -gt 0) {
-    Write-Host "已清理 settings.json 备份" -ForegroundColor Green
+    Write-Host "已清理 settings.json 備份" -ForegroundColor Green
 }
 
 if (-not $SkipBanner) {
     Write-Host ""
-    Write-Host "=== 卸载完成！===" -ForegroundColor Green
-    Write-Host "重启 Claude Code 即可恢复英文界面"
+    Write-Host "=== 解除安裝完成！===" -ForegroundColor Green
+    Write-Host "重啟 Claude Code 即可恢復英文介面"
 }

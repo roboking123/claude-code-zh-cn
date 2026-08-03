@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env pwsh
-# claude-code-zh-cn Windows 安装脚本 (PowerShell)
-# 将中文本地化设置合并到 Claude Code 的 settings.json
-# 移植自 install.sh - 适配 Windows 原生环境
-# 支持 PowerShell 5.1+
+# claude-code-zh-cn Windows 安裝腳本 (PowerShell)
+# 將中文在地化設定合併到 Claude Code 的 settings.json
+# 移植自 install.sh - 適配 Windows 原生環境
+# 支援 PowerShell 5.1+
 
 param(
     [switch]$UpdateOnly = $false,
@@ -12,7 +12,7 @@ param(
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# ======== 路径变量 ========
+# ======== 路徑變數 ========
 $ScriptDir = $PSScriptRoot
 $SettingsFile = "$env:USERPROFILE\.claude\settings.json"
 $OverlayFile = "$ScriptDir\settings-overlay.json"
@@ -31,38 +31,38 @@ $CcSwitchSyncChoice = $env:ZH_CN_CCSWITCH_SYNC
 $TmpDir = "$env:TEMP\claude-zh-cn"
 $SupportMatrixUrl = "https://github.com/taekchef/claude-code-zh-cn/blob/main/docs/support-matrix.md"
 
-$CliPatchStatusSummary = "已跳过（未执行 CLI Patch）"
+$CliPatchStatusSummary = "已跳過（未執行 CLI Patch）"
 $CliPatchStatusOk = $false
 $OfficialPluginId = "claude-code-zh-cn@claude-code-zh-cn"
 $OfficialMarketplaceName = "claude-code-zh-cn"
 $OfficialFallbackMarker = "$PluginDst\.official-fallback-disabled"
 $PluginRuntimeMode = "standalone"
 
-# ======== 帮助函数 ========
+# ======== 幫助函式 ========
 function Write-CN {
     param([string]$Msg, [string]$Color = "White")
     Write-Host $Msg -ForegroundColor $Color
 }
 
 function write-support-window-link {
-    Write-Host "  支持窗口: $SupportMatrixUrl"
+    Write-Host "  支援視窗: $SupportMatrixUrl"
 }
 
 function write-updater-boundary-note {
-    Write-CN "  ! Claude Code 本体自动升级 → DISABLE_AUTOUPDATER 不归本插件兜底；请以 claude doctor 的 Updates 段为准" Yellow
+    Write-CN "  ! Claude Code 本體自動升級 → DISABLE_AUTOUPDATER 不歸本外掛兜底；請以 claude doctor 的 Updates 段為準" Yellow
 }
 
 function write-unpublished-window-note {
-    Write-CN "  提醒：本机自验证是临时 patch，不等于已发布支持；升到未发布窗口时请先看支持窗口，未收录就等插件 Release 或临时退回已验证版本。" Yellow
+    Write-CN "  提醒：本機自驗證是臨時 patch，不等於已釋出支援；升到未釋出視窗時請先看支援視窗，未收錄就等外掛 Release 或臨時退回已驗證版本。" Yellow
 }
 
 function banner {
     if ($SkipBanner) { return }
     Write-Host ""
     if ($UpdateOnly) {
-        Write-CN "=== Claude Code 中文本地化插件 更新 ===" Blue
+        Write-CN "=== Claude Code 中文在地化外掛 更新 ===" Blue
     } else {
-        Write-CN "=== Claude Code 中文本地化插件 安装 ===" Blue
+        Write-CN "=== Claude Code 中文在地化外掛 安裝 ===" Blue
     }
     Write-Host ""
 }
@@ -87,13 +87,13 @@ function run-install-json-helper {
     param([string[]]$HelperArgs)
     $output = & node $InstallJsonHelper @HelperArgs
     if ($LASTEXITCODE -ne 0) {
-        Write-CN "错误：install-json-helper 执行失败" Red
+        Write-CN "錯誤：install-json-helper 執行失敗" Red
         exit 1
     }
     return $output
 }
 
-# ======== Settings 合并脚本（单行 JS，无特殊字符） ========
+# ======== Settings 合併腳本（單行 JS，無特殊字元） ========
 $JS_BACKUP_PRUNE = "var fs=require('fs'),path=require('path');var dir=process.env.ZH_CN_SETTINGS_DIR;try{var all=fs.readdirSync(dir).filter(function(n){return n.indexOf('settings.json.zh-cn-backup.')===0}).sort();var stale=all.slice(0,Math.max(0,all.length-5));for(var i=0;i<stale.length;i++){fs.unlinkSync(path.join(dir,stale[i]))}}catch(e){}"
 $JS_BUILD_OVERLAY_FILES = "var fs=require('fs');function r(f){return JSON.parse(fs.readFileSync(f,'utf8').replace(/^\uFEFF/,''))}var base=r(process.argv[2]);var verbs=r(process.argv[3]);var tips=r(process.argv[4]);base.spinnerVerbs=verbs;base.spinnerTipsOverride={excludeDefault:true,tips:(tips.tips||[]).map(function(t){return t.text})};process.stdout.write(JSON.stringify(base))"
 $JS_DEEP_MERGE_FILES = "var fs=require('fs');function r(f){return JSON.parse(fs.readFileSync(f,'utf8').replace(/^\uFEFF/,''))}var sf=process.argv[2];var of=process.argv[3];function po(v){return v&&typeof v==='object'&&!Array.isArray(v)}function dm(b,o){var out={};var k;for(k in b){if(Object.prototype.hasOwnProperty.call(b,k))out[k]=b[k]}for(k in o){if(!Object.prototype.hasOwnProperty.call(o,k))continue;if(po(out[k])&&po(o[k]))out[k]=dm(out[k],o[k]);else out[k]=o[k]}return out}fs.writeFileSync(sf,JSON.stringify(dm(r(sf),r(of)),null,2)+'\n');process.stdout.write('ok')"
@@ -179,24 +179,24 @@ if(mode==="official-retry"){
 if(changed)process.stdout.write(JSON.stringify(settings,null,2)+"\n");
 '@
 
-# ======== 输出函数 ========
+# ======== 輸出函式 ========
 function completion {
     if ($UpdateOnly -or $SkipBanner) { return }
     Write-Host ""
-    Write-CN "=== 安装完成！===" Green
+    Write-CN "=== 安裝完成！===" Green
     Write-Host ""
-    Write-CN "已启用的功能："
-    Write-CN "  √ AI 回复语言 → 中文" Green
-    Write-CN "  √ Spinner 提示 → 中文（41 条）" Green
-    Write-CN "  √ Spinner 动词 → 中文（187 个）" Green
-    Write-CN "  √ 会话启动 Hook → 中文上下文注入（Windows PowerShell）" Green
-    Write-CN "  √ 通知 Hook → 中文翻译（Windows PowerShell）" Green
-    Write-CN "  √ 输出风格 → Chinese" Green
-    Write-CN "  √ 自动重 patch → Claude Code 更新后首次会话自动修复（session-start 兜底）" Green
+    Write-CN "已啟用的功能："
+    Write-CN "  √ AI 回覆語言 → 中文" Green
+    Write-CN "  √ Spinner 提示 → 中文（41 條）" Green
+    Write-CN "  √ Spinner 動詞 → 中文（187 個）" Green
+    Write-CN "  √ 工作階段啟動 Hook → 中文上下文注入（Windows PowerShell）" Green
+    Write-CN "  √ 通知 Hook → 中文翻譯（Windows PowerShell）" Green
+    Write-CN "  √ 輸出風格 → Chinese" Green
+    Write-CN "  √ 自動重 patch → Claude Code 更新後首次工作階段自動修復（session-start 兜底）" Green
     switch ($PluginRuntimeMode) {
-        "standalone" { Write-CN "  ! 独立备用更新 → 限时检查 Release，会话结束后按提示手动更新" Yellow }
-        "disabled" { Write-CN "  ! 正式插件已停用 → 保留用户选择，不加载备用 Hook" Yellow }
-        default { Write-CN "  √ 正式插件更新 → 由 Claude plugin manager 管理" Green }
+        "standalone" { Write-CN "  ! 獨立備用更新 → 限時檢查 Release，工作階段結束後按提示手動更新" Yellow }
+        "disabled" { Write-CN "  ! 正式外掛已停用 → 保留使用者選擇，不載入備用 Hook" Yellow }
+        default { Write-CN "  √ 正式外掛更新 → 由 Claude plugin manager 管理" Green }
     }
     write-updater-boundary-note
     if ($CliPatchStatusOk) {
@@ -206,25 +206,25 @@ function completion {
     }
     write-support-window-link
     Write-Host ""
-    Write-Host "重启 Claude Code 即可生效。如需卸载，运行：" -NoNewline
+    Write-Host "重啟 Claude Code 即可生效。如需解除安裝，執行：" -NoNewline
     Write-CN ".\uninstall.ps1" Yellow
 }
 
-# ======== 依赖检查 ========
+# ======== 依賴檢查 ========
 function check-deps {
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-        Write-CN "错误：需要 node，请先安装 Node.js" Red
+        Write-CN "錯誤：需要 node，請先安裝 Node.js" Red
         exit 1
     }
     if (-not $UpdateOnly -and -not $SkipBanner) {
         if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
-            Write-CN "提示：建议安装 jq 以获得更好的 JSON 合并支持" Yellow
+            Write-CN "提示：建議安裝 jq 以獲得更好的 JSON 合併支援" Yellow
             Write-Host "  winget install jqlang.jq"
         }
     }
 }
 
-# ======== 路径/安装检测 ========
+# ======== 路徑/安裝偵測 ========
 function find-real-claude {
     if ($env:ZH_CN_REAL_CLAUDE -and (Get-Command $env:ZH_CN_REAL_CLAUDE -ErrorAction SilentlyContinue)) {
         return $env:ZH_CN_REAL_CLAUDE
@@ -333,7 +333,7 @@ function activate-standalone-fallback {
     param([string]$Reason)
 
     $script:PluginRuntimeMode = "standalone"
-    Write-CN "官方插件 CLI 校验未完成（$Reason）；将停用未确认的官方入口，并启用一套独立备用 Hook。基础中文设置和 CLI Patch 不受影响。" Yellow
+    Write-CN "官方外掛 CLI 校驗未完成（$Reason）；將停用未確認的官方入口，並啟用一套獨立備用 Hook。基礎中文設定和 CLI Patch 不受影響。" Yellow
 }
 
 function mark-official-plugin-verified {
@@ -354,7 +354,7 @@ function select-safe-plugin-fallback {
                 activate-standalone-fallback $Reason
             } else {
                 $script:PluginRuntimeMode = "disabled"
-                Write-CN "官方插件已明确停用；保留用户选择，不加载备用 Hook。基础中文设置和 CLI Patch 继续生效。" Yellow
+                Write-CN "官方外掛已明確停用；保留使用者選擇，不載入備用 Hook。基礎中文設定和 CLI Patch 繼續生效。" Yellow
             }
         }
         default {
@@ -386,7 +386,7 @@ process.stdout.write(path.resolve(file));
     try {
         [System.IO.File]::WriteAllText($temp, $Json, $utf8NoBom)
         if (Test-Path $target) {
-            # Windows ReplaceFile 保留目标文件的 ACL，并在失败时保留原目标。
+            # Windows ReplaceFile 保留目標檔案的 ACL，並在失敗時保留原目標。
             [System.IO.File]::Replace($temp, $target, $rollback, $true)
             Remove-Item $rollback -Force -ErrorAction SilentlyContinue
         } else {
@@ -415,9 +415,9 @@ function register-official-plugin {
         reconcile-standalone-hooks
         if ((official-plugin-settings-state) -eq "enabled") {
             $initialSettingsState = "enabled"
-            Write-CN "上次因校验失败临时停用了官方入口；本次重新尝试正式插件注册。" Yellow
+            Write-CN "上次因校驗失敗臨時停用了官方入口；本次重新嘗試正式外掛註冊。" Yellow
         } else {
-            select-safe-plugin-fallback "无法安全切换到正式插件重试状态"
+            select-safe-plugin-fallback "無法安全切換到正式外掛重試狀態"
             return
         }
     }
@@ -431,33 +431,33 @@ function register-official-plugin {
             try { & $claudeCli plugin update $OfficialPluginId --scope user *> $null } catch {}
         }
         $script:PluginRuntimeMode = "disabled"
-        Write-CN "官方插件已明确停用；已保留用户选择，不调用 install，也不加载备用 Hook。" Yellow
+        Write-CN "官方外掛已明確停用；已保留使用者選擇，不呼叫 install，也不載入備用 Hook。" Yellow
         return
     }
 
     if ($UpdateOnly -and (verify-official-plugin-registration $claudeCli)) {
         mark-official-plugin-verified
-        Write-CN "官方插件注册已验证（user scope）" Green
+        Write-CN "官方外掛註冊已驗證（user scope）" Green
         return
     }
 
     if (-not (Test-Path "$PluginSrc\.claude-plugin\plugin.json")) {
-        select-safe-plugin-fallback "安装包缺少官方插件清单"
+        select-safe-plugin-fallback "安裝包缺少官方外掛清單"
         return
     }
 
     if (-not (Test-Path "$ScriptDir\.claude-plugin\marketplace.json")) {
         if (-not (official-user-plugin-installed $claudeCli)) {
-            select-safe-plugin-fallback "安装包缺少插件市场清单，且未检测到已安装的官方插件"
+            select-safe-plugin-fallback "安裝包缺少外掛市場清單，且未偵測到已安裝的官方外掛"
             return
         }
         try { & $claudeCli plugin marketplace update $OfficialMarketplaceName *> $null } catch {}
         try { & $claudeCli plugin update $OfficialPluginId --scope user *> $null } catch {}
         if (verify-official-plugin-registration $claudeCli) {
             mark-official-plugin-verified
-            Write-CN "官方插件注册已验证（user scope）" Green
+            Write-CN "官方外掛註冊已驗證（user scope）" Green
         } else {
-            select-safe-plugin-fallback "官方插件自动更新后校验失败"
+            select-safe-plugin-fallback "官方外掛自動更新後校驗失敗"
         }
         return
     }
@@ -470,9 +470,9 @@ function register-official-plugin {
         if ($LASTEXITCODE -ne 0) {
             if (verify-official-plugin-registration $claudeCli) {
                 mark-official-plugin-verified
-                Write-CN "插件市场刷新失败，继续使用已验证的官方 user 插件。" Yellow
+                Write-CN "外掛市場重新整理失敗，繼續使用已驗證的官方 user 外掛。" Yellow
             } else {
-                select-safe-plugin-fallback "插件市场注册失败"
+                select-safe-plugin-fallback "外掛市場註冊失敗"
             }
             return
         }
@@ -487,19 +487,19 @@ function register-official-plugin {
         }
     } catch {
         if (-not (verify-official-plugin-registration $claudeCli)) {
-            select-safe-plugin-fallback "官方插件命令执行失败"
+            select-safe-plugin-fallback "官方外掛命令執行失敗"
             return
         }
     }
 
     if (verify-official-plugin-registration $claudeCli) {
         mark-official-plugin-verified
-        Write-CN "官方插件注册已验证（user scope）" Green
+        Write-CN "官方外掛註冊已驗證（user scope）" Green
     } else {
         if ($pluginInstallFailed) {
-            select-safe-plugin-fallback "官方插件安装失败"
+            select-safe-plugin-fallback "官方外掛安裝失敗"
         } else {
-            select-safe-plugin-fallback "安装后列表校验失败"
+            select-safe-plugin-fallback "安裝後列表校驗失敗"
         }
     }
 }
@@ -513,7 +513,7 @@ function reconcile-standalone-hooks {
             $fallbackMarkerCreated = $true
         } catch {
             $script:PluginRuntimeMode = "official-unverified"
-            Write-CN "无法写入正式插件重试标记；为避免重复 Hook，本次不注入备用 Hook。" Yellow
+            Write-CN "無法寫入正式外掛重試標記；為避免重複 Hook，本次不注入備用 Hook。" Yellow
         }
     }
 
@@ -524,14 +524,14 @@ function reconcile-standalone-hooks {
             commit-settings-json-safely $reconciledJson
         }
         if ($PluginRuntimeMode -eq "standalone") {
-            Write-CN "已启用独立备用 Hook（不会与官方插件 Hook 同时加载）" Yellow
+            Write-CN "已啟用獨立備用 Hook（不會與官方外掛 Hook 同時載入）" Yellow
         }
     } catch {
         if ($fallbackMarkerCreated) {
             Remove-Item $OfficialFallbackMarker -Force -ErrorAction SilentlyContinue
         }
         $script:PluginRuntimeMode = "official-unverified"
-        Write-CN "备用 Hook 安全写入失败；为避免重复 Hook，本次保留官方入口。基础中文设置和 CLI Patch 仍保持可用。" Yellow
+        Write-CN "備用 Hook 安全寫入失敗；為避免重複 Hook，本次保留官方入口。基礎中文設定和 CLI Patch 仍保持可用。" Yellow
     }
 }
 
@@ -590,7 +590,7 @@ function detect-launcher-install {
 function ensure-settings {
     if (-not (Test-Path $SettingsFile)) {
         if (-not $UpdateOnly -and -not $SkipBanner) {
-            Write-CN "settings.json 不存在，创建新文件" Yellow
+            Write-CN "settings.json 不存在，建立新檔案" Yellow
         }
         $dir = Split-Path -Parent $SettingsFile
         New-Item -ItemType Directory -Force -Path $dir | Out-Null
@@ -621,7 +621,7 @@ function merge-settings {
         Copy-Item $SettingsFile $backupFile
         remove-old-backups
         if (-not $SkipBanner) {
-            Write-CN "已备份 settings.json -> $backupFile" Green
+            Write-CN "已備份 settings.json -> $backupFile" Green
         }
     }
     $overlayContent = build-overlay
@@ -638,7 +638,7 @@ function merge-settings {
         Remove-Item $overlayTempFile -Force -ErrorAction SilentlyContinue
     }
     if ($mergeResult -ne "ok") {
-        Write-CN "错误：settings.json 合并失败" Red
+        Write-CN "錯誤：settings.json 合併失敗" Red
         exit 1
     }
     if (-not $SkipBanner) {
@@ -652,7 +652,7 @@ function merge-settings {
 
 function write-ccswitch-manual-steps {
     if ($SkipBanner) { return }
-    Write-CN "你也可以在 CC Switch 中手动处理：编辑 Claude 供应商 -> 编辑通用配置 -> 从编辑内容提取 -> 保存，并确认要切换的供应商勾选写入通用配置。" Yellow
+    Write-CN "你也可以在 CC Switch 中手動處理：編輯 Claude 供應商 -> 編輯通用配置 -> 從編輯內容提取 -> 儲存，並確認要切換的供應商勾選寫入通用配置。" Yellow
 }
 
 function get-ccswitch-consent {
@@ -677,10 +677,10 @@ function ask-ccswitch-consent {
     }
 
     Write-Host ""
-    Write-CN "检测到你在使用 CC Switch。它切换供应商时会重写 Claude 的 settings.json，可能覆盖中文插件设置。" Yellow
-    Write-Host "要不要现在把中文插件设置同步到 CC Switch 的通用配置，并让 Claude 供应商切换时写入通用配置？"
-    Write-Host "同意后，之后切换供应商也会保留中文；不会修改 API Key、模型或供应商配置。"
-    $answer = Read-Host "输入 Y 帮我同步，或 n 自己处理 [Y/n]"
+    Write-CN "偵測到你在使用 CC Switch。它切換供應商時會重寫 Claude 的 settings.json，可能覆蓋中文外掛設定。" Yellow
+    Write-Host "要不要現在把中文外掛設定同步到 CC Switch 的通用配置，並讓 Claude 供應商切換時寫入通用配置？"
+    Write-Host "同意後，之後切換供應商也會保留中文；不會修改 API Key、模型或供應商配置。"
+    $answer = Read-Host "輸入 Y 幫我同步，或 n 自己處理 [Y/n]"
 
     if (-not $answer -or $answer -match '^(y|yes|Y|YES|是|好|同意)$') {
         return "allow"
@@ -717,7 +717,7 @@ function sync-ccswitch-common-config {
 
     if (-not (Get-Command sqlite3 -ErrorAction SilentlyContinue)) {
         if (-not $UpdateOnly -and -not $SkipBanner) {
-            Write-CN "检测到 CC Switch，但未找到 sqlite3，无法自动检查/同步通用配置。" Yellow
+            Write-CN "偵測到 CC Switch，但未找到 sqlite3，無法自動檢查/同步通用配置。" Yellow
             write-ccswitch-manual-steps
         }
         return
@@ -735,7 +735,7 @@ function sync-ccswitch-common-config {
         $currentValue = sqlite3 $dbFile "select value from settings where key='common_config_claude';" 2>$null
         if ($LASTEXITCODE -ne 0) {
             if (-not $UpdateOnly -and -not $SkipBanner) {
-                Write-CN "检测到 CC Switch，但无法读取通用配置表，已跳过自动同步。" Yellow
+                Write-CN "偵測到 CC Switch，但無法讀取通用配置表，已跳過自動同步。" Yellow
             }
             return
         }
@@ -755,7 +755,7 @@ function sync-ccswitch-common-config {
         }
         if ($status -ne "needs-sync") {
             if (-not $UpdateOnly -and -not $SkipBanner) {
-                Write-CN "检测到 CC Switch，但 common_config_claude 不是有效 JSON，已跳过自动同步。" Yellow
+                Write-CN "偵測到 CC Switch，但 common_config_claude 不是有效 JSON，已跳過自動同步。" Yellow
                 write-ccswitch-manual-steps
             }
             return
@@ -782,8 +782,8 @@ function sync-ccswitch-common-config {
                 set-ccswitch-consent "manual"
             } else {
                 if (-not $UpdateOnly -and -not $SkipBanner) {
-                    Write-CN "检测到 CC Switch 通用配置缺少中文设置；当前不是交互式安装，未自动修改。" Yellow
-                    Write-CN "如需授权自动同步，可运行：`$env:ZH_CN_CCSWITCH_SYNC='1'; .\install.ps1" Yellow
+                    Write-CN "偵測到 CC Switch 通用配置缺少中文設定；目前不是互動式安裝，未自動修改。" Yellow
+                    Write-CN "如需授權自動同步，可執行：`$env:ZH_CN_CCSWITCH_SYNC='1'; .\install.ps1" Yellow
                     write-ccswitch-manual-steps
                 }
                 return
@@ -801,7 +801,7 @@ function sync-ccswitch-common-config {
         run-js $JS_CCSWITCH_MERGE @($currentFile, $overlayFile, $mergedFile) | Out-Null
         if ($LASTEXITCODE -ne 0 -or -not (Test-Path $mergedFile)) {
             if (-not $SkipBanner) {
-                Write-CN "CC Switch 通用配置合并失败，已跳过自动同步。" Yellow
+                Write-CN "CC Switch 通用配置合併失敗，已跳過自動同步。" Yellow
                 write-ccswitch-manual-steps
             }
             return
@@ -822,22 +822,22 @@ function sync-ccswitch-common-config {
         sqlite3 $dbFile $sql | Out-Null
         if ($LASTEXITCODE -eq 0) {
             if (-not $SkipBanner) {
-                Write-CN "已在用户同意后同步 CC Switch 通用配置" Green
+                Write-CN "已在使用者同意後同步 CC Switch 通用配置" Green
                 if ($providerSyncSummary) {
                     $providerParts = $providerSyncSummary -split ' '
                     if ($providerParts.Count -ge 3 -and $providerParts[1] -ne "0") {
-                        Write-CN "已让 CC Switch 的 Claude 供应商切换时写入通用配置（$($providerParts[0])/$($providerParts[1]) 个需要更新）" Green
+                        Write-CN "已讓 CC Switch 的 Claude 供應商切換時寫入通用配置（$($providerParts[0])/$($providerParts[1]) 個需要更新）" Green
                     }
                     if ($providerParts.Count -ge 3 -and $providerParts[2] -ne "0") {
-                        Write-CN "有 $($providerParts[2]) 个 Claude 供应商 meta 不是有效 JSON，已跳过。" Yellow
+                        Write-CN "有 $($providerParts[2]) 個 Claude 供應商 meta 不是有效 JSON，已跳過。" Yellow
                     }
                 }
-                if ($backupFile) { Write-CN "已备份 CC Switch 数据库 -> $backupFile" Green }
+                if ($backupFile) { Write-CN "已備份 CC Switch 資料庫 -> $backupFile" Green }
             }
         } else {
             if (-not $SkipBanner) {
-                Write-CN "CC Switch 数据库当前无法写入，已跳过自动同步。" Yellow
-                if ($backupFile) { Write-CN "同步前备份已保留：$backupFile" Yellow }
+                Write-CN "CC Switch 資料庫目前無法寫入，已跳過自動同步。" Yellow
+                if ($backupFile) { Write-CN "同步前備份已保留：$backupFile" Yellow }
                 write-ccswitch-manual-steps
             }
         }
@@ -846,10 +846,10 @@ function sync-ccswitch-common-config {
     }
 }
 
-# ======== 插件同步 ========
+# ======== 外掛同步 ========
 function sync-plugin {
     if (-not $PluginDst -or $PluginDst -eq "\" -or $PluginDst -eq "/") {
-        Write-CN "错误：PLUGIN_DST 非法，拒绝同步" Red
+        Write-CN "錯誤：PLUGIN_DST 非法，拒絕同步" Red
         exit 1
     }
     if (Test-Path $PluginDst) {
@@ -868,11 +868,11 @@ function sync-plugin {
         $hooksContent | Out-File -FilePath $dstHooksJson -Encoding ascii -NoNewline
     }
     if (-not $SkipBanner) {
-        Write-CN "已安装插件 -> $PluginDst" Green
+        Write-CN "已安裝外掛 -> $PluginDst" Green
     }
 }
 
-# ======== Launcher 安装 ========
+# ======== Launcher 安裝 ========
 function remove-launcher-file {
     param([string]$Target)
     if (-not (Test-Path $Target)) { return }
@@ -886,7 +886,7 @@ function remove-launcher-file {
         Remove-Item $Target -Force -ErrorAction SilentlyContinue
         return $true
     } elseif (-not $SkipBanner) {
-        Write-CN "检测到自定义 launcher，未自动删除：$Target" Yellow
+        Write-CN "偵測到自訂 launcher，未自動刪除：$Target" Yellow
     }
     return $false
 }
@@ -904,7 +904,7 @@ function remove-launcher-artifacts {
     }
 
     if ($remaining -and -not $SkipBanner -and ($removedCmd -or $removedPs1)) {
-        Write-CN "launcher 目录还有其他文件，未移除 PATH：$LauncherBinDir" Yellow
+        Write-CN "launcher 目錄還有其他檔案，未移除 PATH：$LauncherBinDir" Yellow
     }
 
     if (-not $remaining -and $env:ZH_CN_SKIP_USER_PATH_UPDATE -ne "1") {
@@ -929,14 +929,14 @@ function install-launcher {
     if ($kind -ne "npm") {
         remove-launcher-artifacts
         if (-not $SkipBanner) {
-            Write-CN "当前安装方式不是 npm cli.js，已跳过 launcher PATH 注入" Yellow
+            Write-CN "目前安裝方式不是 npm cli.js，已跳過 launcher PATH 注入" Yellow
         }
         return
     }
 
     if (-not (Test-Path "$PluginSrc\bin\claude-launcher.cmd")) {
         if (-not $SkipBanner) {
-            Write-CN "launcher 文件缺失，已跳过 PATH 注入" Yellow
+            Write-CN "launcher 檔案缺失，已跳過 PATH 注入" Yellow
         }
         return
     }
@@ -947,18 +947,18 @@ function install-launcher {
     $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
     if ($env:ZH_CN_SKIP_USER_PATH_UPDATE -eq "1") {
         if (-not $SkipBanner) {
-            Write-CN "测试模式：已跳过用户 PATH 持久化写入" Yellow
+            Write-CN "測試模式：已跳過使用者 PATH 持久化寫入" Yellow
         }
     } elseif ($currentUserPath -notlike "*$LauncherBinDir*") {
         $newPath = $LauncherBinDir
         if ($currentUserPath) { $newPath = "$LauncherBinDir;$currentUserPath" }
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
         if (-not $SkipBanner) {
-            Write-CN "已将 launcher 目录加入用户 PATH -> $LauncherBinDir" Green
+            Write-CN "已將 launcher 目錄加入使用者 PATH -> $LauncherBinDir" Green
         }
     }
     if (-not $SkipBanner) {
-        Write-CN "已安装 Windows launcher -> $LauncherBinDir" Green
+        Write-CN "已安裝 Windows launcher -> $LauncherBinDir" Green
     }
 }
 
@@ -990,14 +990,14 @@ function read-cli-version {
 function patch-npm-cli {
     param([string]$CliFile)
     Write-Host ""
-    Write-CN "正在 patch cli.js 硬编码文字..." Blue
+    Write-CN "正在 patch cli.js 硬編碼文字..." Blue
     $currentVersion = read-cli-version $CliFile
     $backupFile = "$CliFile.zh-cn-backup"
     $patchScript = Join-Path $PluginSrc "patch-cli.js"
     $translationsFile = Join-Path $PluginSrc "cli-translations.json"
     if (-not (Test-Path $patchScript)) { return }
 
-    # 备份/恢复/语法校验/失败回滚统一由 patch-cli.js 托管（--backup 模式）
+    # 備份/恢復/語法校驗/失敗回滾統一由 patch-cli.js 託管（--backup 模式）
     $statusFile = Join-Path ([System.IO.Path]::GetTempPath()) ("cczh-patch-status-" + [System.IO.Path]::GetRandomFileName())
     $patchCount = node $patchScript $CliFile $translationsFile --backup $backupFile --status $statusFile 2>$null
     $patchStatus = "error"
@@ -1008,28 +1008,28 @@ function patch-npm-cli {
 
     switch ($patchStatus) {
         "ok" {
-            Write-CN "已 patch cli.js（${patchCount} 处硬编码文字）" Green
-            $script:CliPatchStatusSummary = "cli.js 中文化（${patchCount} 处硬编码文字）"
+            Write-CN "已 patch cli.js（${patchCount} 處硬編碼文字）" Green
+            $script:CliPatchStatusSummary = "cli.js 中文化（${patchCount} 處硬編碼文字）"
             $script:CliPatchStatusOk = $true
         }
         "partial" {
-            Write-CN "已 patch cli.js（${patchCount} 处），但当前版本存在未覆盖的英文文案（部分降级，CLI 可正常使用）" Yellow
-            $script:CliPatchStatusSummary = "cli.js 部分中文化（${patchCount} 处，当前版本存在未覆盖文案）"
+            Write-CN "已 patch cli.js（${patchCount} 處），但目前版本存在未覆蓋的英文文案（部分降級，CLI 可正常使用）" Yellow
+            $script:CliPatchStatusSummary = "cli.js 部分中文化（${patchCount} 處，目前版本存在未覆蓋文案）"
             $script:CliPatchStatusOk = $true
         }
         "noop" {
-            Write-CN "cli.js 无新增改动（可能已是最新状态）" Green
-            $script:CliPatchStatusSummary = "cli.js 无新增改动（可能已是最新状态）"
+            Write-CN "cli.js 無新增改動（可能已是最新狀態）" Green
+            $script:CliPatchStatusSummary = "cli.js 無新增改動（可能已是最新狀態）"
             $script:CliPatchStatusOk = $true
         }
         "validation-failed" {
-            Write-CN "patch 结果未通过 JS 语法校验，已放弃写入（CLI 保持英文可用，详见插件目录 patch.log）" Yellow
-            $script:CliPatchStatusSummary = "已跳过（patch 结果未通过语法校验，CLI 保持英文可用）"
+            Write-CN "patch 結果未通過 JS 語法校驗，已放棄寫入（CLI 保持英文可用，詳見外掛目錄 patch.log）" Yellow
+            $script:CliPatchStatusSummary = "已跳過（patch 結果未通過語法校驗，CLI 保持英文可用）"
             return
         }
         default {
-            Write-CN "CLI Patch 未完成（详见插件目录 patch.log），CLI 保持原样可用" Yellow
-            $script:CliPatchStatusSummary = "已跳过（CLI Patch 未完成，详见 patch.log）"
+            Write-CN "CLI Patch 未完成（詳見外掛目錄 patch.log），CLI 保持原樣可用" Yellow
+            $script:CliPatchStatusSummary = "已跳過（CLI Patch 未完成，詳見 patch.log）"
             return
         }
     }
@@ -1135,15 +1135,15 @@ function patch-native-bun {
         $helper = "$PluginSrc\bun-binary-io.js"
     }
     if (-not (Test-Path $helper)) {
-        Write-CN "原生二进制 patch helper 缺失，已跳过 CLI Patch" Yellow
+        Write-CN "原生二進位制 patch helper 缺失，已跳過 CLI Patch" Yellow
         write-support-window-link
-        $script:CliPatchStatusSummary = "已跳过（原生二进制 helper 缺失）"
+        $script:CliPatchStatusSummary = "已跳過（原生二進位制 helper 缺失）"
         return
     }
 
     Write-Host ""
-    Write-CN "检测到 Windows 原生二进制安装" Blue
-    Write-Host "  二进制路径: $BinaryPath"
+    Write-CN "偵測到 Windows 原生二進位制安裝" Blue
+    Write-Host "  二進位制路徑: $BinaryPath"
 
     $currentVersion = (node $helper version $BinaryPath 2>$null)
     if ($currentVersion) { $currentVersion = $currentVersion.Trim() }
@@ -1156,29 +1156,29 @@ function patch-native-bun {
     } else {
         $displayVersion = $currentVersion
         if (-not $displayVersion) { $displayVersion = "unknown" }
-        Write-CN "当前 Windows 原生二进制版本 $displayVersion 暂不支持 CLI Patch，已跳过 CLI Patch（安全退出）" Yellow
+        Write-CN "目前 Windows 原生二進位制版本 $displayVersion 暫不支援 CLI Patch，已跳過 CLI Patch（安全離開）" Yellow
         write-support-window-link
         write-updater-boundary-note
-        Write-CN "  下一步：如果是 Claude Code 自动升到未发布窗口，请等插件发布支持，或临时安装支持窗口内版本。" Yellow
-        $script:CliPatchStatusSummary = "已跳过（Windows 原生二进制版本 $displayVersion 暂不支持 CLI Patch）"
+        Write-CN "  下一步：如果是 Claude Code 自動升到未釋出視窗，請等外掛釋出支援，或臨時安裝支援視窗內版本。" Yellow
+        $script:CliPatchStatusSummary = "已跳過（Windows 原生二進位制版本 $displayVersion 暫不支援 CLI Patch）"
         return
     }
 
     if ($patchMode -eq "provisional") {
-        Write-Host "  版本: $currentVersion（未纳入已发布支持窗口，安装时本机自验证）"
+        Write-Host "  版本: $currentVersion（未納入已釋出支援視窗，安裝時本機自驗證）"
         write-support-window-link
         write-unpublished-window-note
     } else {
-        Write-Host "  版本: $currentVersion（已验证）"
+        Write-Host "  版本: $currentVersion（已驗證）"
     }
 
     $depStatus = (node $helper check-deps 2>$null)
     if (-not $depStatus -or $depStatus.Trim() -ne "ok") {
-        Write-CN "需要安装 node-lief 来支持 Windows native patch" Yellow
-        Write-Host "  运行: npm install -g node-lief"
-        Write-Host "  然后重新运行 install.ps1"
+        Write-CN "需要安裝 node-lief 來支援 Windows native patch" Yellow
+        Write-Host "  執行: npm install -g node-lief"
+        Write-Host "  然後重新執行 install.ps1"
         write-support-window-link
-        $script:CliPatchStatusSummary = "已跳过（Windows native CLI Patch 需要 node-lief）"
+        $script:CliPatchStatusSummary = "已跳過（Windows native CLI Patch 需要 node-lief）"
         return
     }
 
@@ -1194,10 +1194,10 @@ function patch-native-bun {
 
     if ((Test-Path $backupFile) -and $currentVersion -and $backupVersion -eq $currentVersion) {
         Copy-Item $backupFile $BinaryPath -Force
-        Write-CN "已从备份恢复原始原生二进制（版本一致: $currentVersion）" Green
+        Write-CN "已從備份恢復原始原生二進位制（版本一致: $currentVersion）" Green
     } else {
         Copy-Item $BinaryPath $backupFile -Force
-        Write-CN "已备份原生二进制（版本: $currentVersion）" Green
+        Write-CN "已備份原生二進位制（版本: $currentVersion）" Green
     }
 
     $sourceHash = (node $helper hash $BinaryPath 2>$null)
@@ -1217,35 +1217,35 @@ function patch-native-bun {
         if ([int]$patchCount -gt 0) {
             node $helper repack $BinaryPath $tmpJs | Out-Null
             if ($LASTEXITCODE -ne 0) { throw "repack failed" }
-            Write-Host "  正在运行 --version 做启动自检..."
+            Write-Host "  正在執行 --version 做啟動自檢..."
             $verifiedVersion = get-native-version-from-execution $BinaryPath
             if ($verifiedVersion -ne $currentVersion) { throw "self verification failed" }
             if ($patchMode -eq "provisional") {
-                Write-CN "本机自验证通过，已 patch Windows 原生二进制（${patchCount} 处硬编码文字）" Green
-                $script:CliPatchStatusSummary = "Windows native 本机自验证中文化（${patchCount} 处硬编码文字，未纳入已发布支持窗口）"
+                Write-CN "本機自驗證通過，已 patch Windows 原生二進位制（${patchCount} 處硬編碼文字）" Green
+                $script:CliPatchStatusSummary = "Windows native 本機自驗證中文化（${patchCount} 處硬編碼文字，未納入已釋出支援視窗）"
             } else {
-                Write-CN "已 patch Windows 原生二进制（${patchCount} 处硬编码文字）" Green
-                $script:CliPatchStatusSummary = "Windows native 中文化（${patchCount} 处硬编码文字）"
+                Write-CN "已 patch Windows 原生二進位制（${patchCount} 處硬編碼文字）" Green
+                $script:CliPatchStatusSummary = "Windows native 中文化（${patchCount} 處硬編碼文字）"
             }
             $script:CliPatchStatusOk = $true
         } else {
-            Write-CN "Windows 原生二进制无新增改动（可能已是最新状态）" Yellow
+            Write-CN "Windows 原生二進位制無新增改動（可能已是最新狀態）" Yellow
             if ($patchMode -eq "provisional") {
-                $script:CliPatchStatusSummary = "已跳过（Windows 原生二进制本机自验证未找到可 patch 内容）"
+                $script:CliPatchStatusSummary = "已跳過（Windows 原生二進位制本機自驗證未找到可 patch 內容）"
                 write-support-window-link
                 return
             } else {
-                $script:CliPatchStatusSummary = "Windows native 无新增改动（可能已是最新状态）"
+                $script:CliPatchStatusSummary = "Windows native 無新增改動（可能已是最新狀態）"
                 $script:CliPatchStatusOk = $true
             }
         }
     } catch {
-        Write-CN "Windows 原生二进制 patch 失败，正在从备份恢复..." Red
+        Write-CN "Windows 原生二進位制 patch 失敗，正在從備份恢復..." Red
         if (Test-Path $backupFile) {
             Copy-Item $backupFile $BinaryPath -Force -ErrorAction SilentlyContinue
         }
         write-support-window-link
-        $script:CliPatchStatusSummary = "已跳过（Windows 原生二进制 patch 失败）"
+        $script:CliPatchStatusSummary = "已跳過（Windows 原生二進位制 patch 失敗）"
         return
     } finally {
         Remove-Item $tmpJs -Force -ErrorAction SilentlyContinue
@@ -1267,14 +1267,14 @@ function patch-native-bun {
 function initial-patch {
     $realClaude = find-real-claude
     if (-not $realClaude) {
-        Write-CN "未找到 Claude Code，跳过 patch 步骤" Yellow
-        $script:CliPatchStatusSummary = "已跳过（未检测到 Claude Code）"
+        Write-CN "未找到 Claude Code，跳過 patch 步驟" Yellow
+        $script:CliPatchStatusSummary = "已跳過（未偵測到 Claude Code）"
         return
     }
     $installInfo = detect-install $realClaude
     if (-not $installInfo) {
-        Write-CN "未找到 Claude Code，跳过 patch 步骤" Yellow
-        $script:CliPatchStatusSummary = "已跳过（未检测到 Claude Code）"
+        Write-CN "未找到 Claude Code，跳過 patch 步驟" Yellow
+        $script:CliPatchStatusSummary = "已跳過（未偵測到 Claude Code）"
         return
     }
     $kind, $target = $installInfo -split ':', 2
@@ -1290,17 +1290,17 @@ function initial-patch {
             }
         }
         "unknown" {
-            Write-CN "当前安装方式暂不支持 CLI Patch，已跳过此步骤" Yellow
-            $script:CliPatchStatusSummary = "已跳过（当前安装方式暂不支持 CLI Patch）"
+            Write-CN "目前安裝方式暫不支援 CLI Patch，已跳過此步驟" Yellow
+            $script:CliPatchStatusSummary = "已跳過（目前安裝方式暫不支援 CLI Patch）"
         }
         default {
-            Write-CN "未识别的安装类型: $kind" Yellow
-            $script:CliPatchStatusSummary = "已跳过（未识别的安装类型: $kind）"
+            Write-CN "未識別的安裝型別: $kind" Yellow
+            $script:CliPatchStatusSummary = "已跳過（未識別的安裝型別: $kind）"
         }
     }
 }
 
-# ======== 元数据写入 ========
+# ======== 後設資料寫入 ========
 function write-metadata {
     $sourceRepo = ""
     if ($SourceRepoOverride) {
