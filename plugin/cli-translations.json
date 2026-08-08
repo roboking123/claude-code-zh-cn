@@ -93,7 +93,7 @@
   },
   {
     "en": " navigate · ",
-    "zh": " 導航 · "
+    "zh": " 移動 · "
   },
   {
     "en": " or ",
@@ -797,11 +797,11 @@
   },
   {
     "en": "Build, debug, and optimize Claude API / Anthropic SDK apps.",
-    "zh": "構建、除錯並最佳化 Claude API / Anthropic SDK 應用。"
+    "zh": "建置、除錯並最佳化 Claude API / Anthropic SDK 應用。"
   },
   {
     "en": "Build, debug, and optimize Claude API / Anthropic SDK apps. Apps built with this skill should include prompt caching.",
-    "zh": "構建、除錯並最佳化 Claude API / Anthropic SDK 應用。使用此技能構建的應用應包含 prompt caching。"
+    "zh": "建置、除錯並最佳化 Claude API / Anthropic SDK 應用。使用此技能建置的應用應包含 prompt caching。"
   },
   {
     "en": "Built-in Hooks",
@@ -993,7 +993,7 @@
   },
   {
     "en": "Claude Code reads this from AWS_REGION, not ~/.aws/config — set it explicitly even if your profile has a region.",
-    "zh": "Claude Code 從 AWS_REGION 讀取此設定，而非 ~/.aws/config — 即使你的 profile 有 region 也需要顯式設定。"
+    "zh": "Claude Code 從 AWS_REGION 讀取此設定，而非 ~/.aws/config — 即使你的 profile 有 region 也需要明確設定。"
   },
   {
     "en": "Claude Code successfully installed!",
@@ -1029,7 +1029,7 @@
   },
   {
     "en": "Claude checkpoints your files before every edit. Press",
-    "zh": "Claude 在每次編輯前會檢查點你的檔案。按"
+    "zh": "Claude 在每次編輯前會先為你的檔案建立檢查點。按"
   },
   {
     "en": "Claude explains its implementation choices and codebase patterns",
@@ -1281,7 +1281,7 @@
   },
   {
     "en": "Connect to an IDE for integrated development features.",
-    "zh": "連線 IDE 以獲取整合開發功能。"
+    "zh": "連線 IDE 以取得整合開發功能。"
   },
   {
     "en": "Connecting GitHub to Claude…",
@@ -1317,7 +1317,7 @@
   },
   {
     "en": "Contact your system administrator for more information.",
-    "zh": "聯絡系統管理員獲取更多資訊。"
+    "zh": "聯絡系統管理員取得更多資訊。"
   },
   {
     "en": "Contains warnings",
@@ -1653,7 +1653,7 @@
   },
   {
     "en": "Do you want to allow Claude to fetch this content?",
-    "zh": "要允許 Claude 獲取此內容嗎？"
+    "zh": "要允許 Claude 取得此內容嗎？"
   },
   {
     "en": "Do you want to allow this connection?",
@@ -1937,27 +1937,27 @@
   },
   {
     "en": "Error editing file",
-    "zh": "編輯檔案出錯"
+    "zh": "編輯檔案時發生錯誤"
   },
   {
     "en": "Error editing notebook",
-    "zh": "編輯筆記本出錯"
+    "zh": "編輯筆記本時發生錯誤"
   },
   {
     "en": "Error loading Claude Code sessions",
-    "zh": "載入 Claude Code 工作階段時出錯"
+    "zh": "載入 Claude Code 工作階段時發生錯誤"
   },
   {
     "en": "Error reading file",
-    "zh": "讀取檔案出錯"
+    "zh": "讀取檔案時發生錯誤"
   },
   {
     "en": "Error searching files",
-    "zh": "搜尋檔案出錯"
+    "zh": "搜尋檔案時發生錯誤"
   },
   {
     "en": "Error writing file",
-    "zh": "寫入檔案出錯"
+    "zh": "寫入檔案時發生錯誤"
   },
   {
     "en": "Error: Unable to create remote session",
@@ -2117,27 +2117,27 @@
   },
   {
     "en": "Fetching AWS caller identity for AWS auth refresh command",
-    "zh": "獲取 AWS 呼叫者身份用於 AWS 認證重新整理命令"
+    "zh": "取得 AWS 呼叫者身份用於 AWS 認證重新整理命令"
   },
   {
     "en": "Fetching AWS caller identity for credential export command",
-    "zh": "獲取 AWS 呼叫者身份用於憑證匯出命令"
+    "zh": "取得 AWS 呼叫者身份用於憑證匯出命令"
   },
   {
     "en": "Fetching session logs",
-    "zh": "獲取工作階段日誌中"
+    "zh": "取得工作階段日誌中"
   },
   {
     "en": "Fetching web page",
-    "zh": "獲取網頁中"
+    "zh": "取得網頁中"
   },
   {
     "en": "Fetching your Claude Code sessions…",
-    "zh": "正在獲取 Claude Code 工作階段…"
+    "zh": "正在取得 Claude Code 工作階段…"
   },
   {
     "en": "Fetching…",
-    "zh": "獲取中…"
+    "zh": "取得中…"
   },
   {
     "en": "File Changed",
@@ -2257,15 +2257,15 @@
   },
   {
     "en": "Generating QR code…",
-    "zh": "正在生成二維碼…"
+    "zh": "正在產生 QR Code…"
   },
   {
     "en": "Get the current weather for a location",
-    "zh": "獲取某地的目前天氣"
+    "zh": "取得某地的目前天氣"
   },
   {
     "en": "Getting branch info",
-    "zh": "獲取分支資訊中"
+    "zh": "取得分支資訊中"
   },
   {
     "en": "Git is required to install marketplaces.",
@@ -2473,7 +2473,7 @@
   },
   {
     "en": "Install Claude Code native build",
-    "zh": "安裝 Claude Code 原生構建"
+    "zh": "安裝 Claude Code 原生建置"
   },
   {
     "en": "Install GitHub App",
@@ -2521,7 +2521,7 @@
   },
   {
     "en": "Installing Claude Code native build ",
-    "zh": "正在安裝 Claude Code 原生構建 "
+    "zh": "正在安裝 Claude Code 原生建置 "
   },
   {
     "en": "Interrupted ",
@@ -2545,7 +2545,7 @@
   },
   {
     "en": "Invalid npm package name format",
-    "zh": "無效的 npm 包名格式"
+    "zh": "無效的 npm 套件名稱格式"
   },
   {
     "en": "Invalid response body, expected a web ReadableStream",
@@ -2761,7 +2761,7 @@
   },
   {
     "en": "Long builds and test suites do not have to block you. Add",
-    "zh": "長時間的構建和測試不會阻塞你。新增"
+    "zh": "長時間的建置和測試不會阻塞你。新增"
   },
   {
     "en": "Long context that holds up",
@@ -2937,7 +2937,7 @@
   },
   {
     "en": "NetworkError when attempting to fetch resource",
-    "zh": "嘗試獲取資源時發生網路錯誤"
+    "zh": "嘗試取得資源時發生網路錯誤"
   },
   {
     "en": "Never for",
@@ -3377,7 +3377,7 @@
   },
   {
     "en": "Package name cannot contain path traversal patterns",
-    "zh": "包名不能包含路徑遍歷模式"
+    "zh": "套件名稱不能包含路徑遍歷模式"
   },
   {
     "en": "Parent session ID for analytics correlation",
@@ -3637,11 +3637,11 @@
   },
   {
     "en": "Press ↑↓ to navigate · Enter to select · Esc to go back",
-    "zh": "按 ↑↓ 導航 · 按 Enter 選擇 · 按 Esc 返回"
+    "zh": "按 ↑↓ 移動 · 按 Enter 選擇 · 按 Esc 返回"
   },
   {
     "en": "Press ↑↓ to navigate, Enter to select, Esc to cancel",
-    "zh": "按 ↑↓ 導航，按 Enter 選擇，按 Esc 取消"
+    "zh": "按 ↑↓ 移動，按 Enter 選擇，按 Esc 取消"
   },
   {
     "en": "Print detailed performance stats",
@@ -4409,7 +4409,7 @@
   },
   {
     "en": "Show QR code to download the Claude mobile app",
-    "zh": "顯示二維碼下載 Claude 移動應用"
+    "zh": "顯示 QR Code 下載 Claude 行動版 App"
   },
   {
     "en": "Show all",
@@ -4445,7 +4445,7 @@
   },
   {
     "en": "Show remote session URL and QR code",
-    "zh": "顯示遠端工作階段 URL 和二維碼"
+    "zh": "顯示遠端工作階段 URL 和 QR Code"
   },
   {
     "en": "Show status in terminal tab",
@@ -5137,7 +5137,7 @@
   },
   {
     "en": "Upgrade to Max for higher rate limits and more Opus",
-    "zh": "升級到 Max 獲取更高速率限制和更多 Opus"
+    "zh": "升級到 Max 取得更高速率限制和更多 Opus"
   },
   {
     "en": "Upgrade to Team plan",
@@ -5593,7 +5593,7 @@
   },
   {
     "en": "Work item lease expired, fetching fresh token",
-    "zh": "工作項租約過期，獲取新 token"
+    "zh": "工作項租約過期，取得新 token"
   },
   {
     "en": "Working Directory Has Changes",
@@ -5629,7 +5629,7 @@
   },
   {
     "en": "Write debug logs to a specific file path (implicitly enables debug mode)",
-    "zh": "將除錯日誌寫入指定檔案路徑（隱式啟用除錯模式）"
+    "zh": "將除錯日誌寫入指定檔案路徑（隱含啟用除錯模式）"
   },
   {
     "en": "Write unit tests for all new utilities",
@@ -5921,7 +5921,7 @@
   },
   {
     "en": "d to disconnect · space for QR code · Enter/Esc to close",
-    "zh": "d 斷開 · 空格 顯示二維碼 · Enter/Esc 關閉"
+    "zh": "d 中斷連線 · 空格 顯示 QR Code · Enter/Esc 關閉"
   },
   {
     "en": "double tap esc to clear input",
@@ -6285,7 +6285,7 @@
   },
   {
     "en": "└ Failed to fetch versions",
-    "zh": "└ 獲取版本失敗"
+    "zh": "└ 取得版本失敗"
   },
   {
     "en": "└ No active version locks",
@@ -6433,7 +6433,7 @@
   },
   {
     "en": "Minimal mode: skip hooks, LSP, plugin sync, attribution, auto-memory, background prefetches, keychain reads, and CLAUDE.md auto-discovery. Sets CLAUDE_CODE_SIMPLE=1. Anthropic auth is strictly ANTHROPIC_API_KEY or apiKeyHelper via --settings (OAuth and keychain are never read). 3P providers (Bedrock/Vertex/Foundry) use their own credentials. Skills still resolve via /skill-name. Explicitly provide context via: --system-prompt[-file], --append-system-prompt[-file], --add-dir (CLAUDE.md dirs), --mcp-config, --settings, --agents, --plugin-dir.",
-    "zh": "極簡模式：跳過 hooks、LSP、外掛同步、歸因、自動記憶、背景預取、鑰匙圈讀取和 CLAUDE.md 自動發現。設定 CLAUDE_CODE_SIMPLE=1。Anthropic 身份驗證嚴格使用 ANTHROPIC_API_KEY 或透過 --settings 配置的 apiKeyHelper（不會讀取 OAuth 和鑰匙圈）。第三方 provider（Bedrock/Vertex/Foundry）使用各自憑據。Skills 仍可透過 /skill-name 解析。請顯式提供上下文：--system-prompt[-file]、--append-system-prompt[-file]、--add-dir（CLAUDE.md 目錄）、--mcp-config、--settings、--agents、--plugin-dir。"
+    "zh": "極簡模式：跳過 hooks、LSP、外掛同步、歸因、自動記憶、背景預取、鑰匙圈讀取和 CLAUDE.md 自動發現。設定 CLAUDE_CODE_SIMPLE=1。Anthropic 身份驗證嚴格使用 ANTHROPIC_API_KEY 或透過 --settings 配置的 apiKeyHelper（不會讀取 OAuth 和鑰匙圈）。第三方 provider（Bedrock/Vertex/Foundry）使用各自憑據。Skills 仍可透過 /skill-name 解析。請明確提供上下文：--system-prompt[-file]、--append-system-prompt[-file]、--add-dir（CLAUDE.md 目錄）、--mcp-config、--settings、--agents、--plugin-dir。"
   },
   {
     "en": "Enable SendUserMessage tool for agent-to-user communication",
@@ -6537,11 +6537,11 @@
   },
   {
     "en": "Input format (only works with --print): \"text\" (default), or \"stream-json\" (realtime streaming input) (choices: \"text\", \"stream-json\")",
-    "zh": "輸入格式（僅 --print 有效）：\"text\"（預設）或 \"stream-json\"（即時流式輸入）（可選：\"text\"、\"stream-json\"）"
+    "zh": "輸入格式（僅 --print 有效）：\"text\"（預設）或 \"stream-json\"（即時串流輸入）（可選：\"text\"、\"stream-json\"）"
   },
   {
     "en": "Input format (only works with --print): \"text\" (default), or \"stream-json\" (realtime streaming input)",
-    "zh": "輸入格式（僅 --print 有效）：\"text\"（預設）或 \"stream-json\"（即時流式輸入）"
+    "zh": "輸入格式（僅 --print 有效）：\"text\"（預設）或 \"stream-json\"（即時串流輸入）"
   },
   {
     "en": "Load a plugin from a directory or .zip for this session only (repeatable: --plugin-dir A --plugin-dir B.zip)",
@@ -6553,11 +6553,11 @@
   },
   {
     "en": "Fetch a plugin .zip from a URL for this session only (repeatable: --plugin-url A --plugin-url B)",
-    "zh": "僅為目前工作階段從 URL 獲取外掛 .zip（可重複：--plugin-url A --plugin-url B）"
+    "zh": "僅為目前工作階段從 URL 取得外掛 .zip（可重複：--plugin-url A --plugin-url B）"
   },
   {
     "en": "Fetch a plugin .zip from a URL for this session only (repeatable: --plugin-url A --plugin-url B) (default: [])",
-    "zh": "僅為目前工作階段從 URL 獲取外掛 .zip（可重複：--plugin-url A --plugin-url B）（預設：[]）"
+    "zh": "僅為目前工作階段從 URL 取得外掛 .zip（可重複：--plugin-url A --plugin-url B）（預設：[]）"
   },
   {
     "en": "Load plugins from a directory for this session only (repeatable: --plugin-dir A --plugin-dir B) (default: [])",
@@ -6641,11 +6641,11 @@
   },
   {
     "en": "Output format (only works with --print): \"text\" (default), \"json\" (single result), or \"stream-json\" (realtime streaming) (choices: \"text\", \"json\", \"stream-json\")",
-    "zh": "輸出格式（僅 --print 有效）：\"text\"（預設）、\"json\"（單次結果）或 \"stream-json\"（即時流式輸出）（可選：\"text\"、\"json\"、\"stream-json\"）"
+    "zh": "輸出格式（僅 --print 有效）：\"text\"（預設）、\"json\"（單次結果）或 \"stream-json\"（即時串流輸出）（可選：\"text\"、\"json\"、\"stream-json\"）"
   },
   {
     "en": "Output format (only works with --print): \"text\" (default), \"json\" (single result), or \"stream-json\" (realtime streaming)",
-    "zh": "輸出格式（僅 --print 有效）：\"text\"（預設）、\"json\"（單次結果）或 \"stream-json\"（即時流式輸出）"
+    "zh": "輸出格式（僅 --print 有效）：\"text\"（預設）、\"json\"（單次結果）或 \"stream-json\"（即時串流輸出）"
   },
   {
     "en": "Print response and exit (useful for pipes). Note: The workspace trust dialog is skipped when Claude is run with the -p mode. Only use this flag in directories you trust.",
@@ -6729,7 +6729,7 @@
   },
   {
     "en": "Get AI feedback on your custom auto mode rules",
-    "zh": "獲取 AI 對你自訂 auto mode 規則的回饋"
+    "zh": "取得 AI 對你自訂 auto mode 規則的回饋"
   },
   {
     "en": "Print the default auto mode environment, allow, and deny rules as JSON",
@@ -6741,7 +6741,7 @@
   },
   {
     "en": "Install Claude Code native build. Use [target] to specify version (stable, latest, or specific version)",
-    "zh": "安裝 Claude Code 原生構建。使用 [target] 指定版本（stable、latest 或具體版本）"
+    "zh": "安裝 Claude Code 原生建置。使用 [target] 指定版本（stable、latest 或具體版本）"
   },
   {
     "en": "Configure and manage MCP servers",
@@ -6773,11 +6773,11 @@
   },
   {
     "en": "Get details about an MCP server. Note: The workspace trust dialog is skipped and stdio servers from .mcp.json are spawned for health checks. Only use this command in directories you trust.",
-    "zh": "獲取 MCP 伺服器詳情。注意：此命令會跳過工作區信任對話方塊，並啟動 .mcp.json 中的 stdio 伺服器進行健康檢查。只在你信任的目錄中使用此命令。"
+    "zh": "取得 MCP 伺服器詳情。注意：此命令會跳過工作區信任對話方塊，並啟動 .mcp.json 中的 stdio 伺服器進行健康檢查。只在你信任的目錄中使用此命令。"
   },
   {
     "en": "Get details about an MCP server. Unapproved .mcp.json servers are shown as \\u23F8 Pending approval and not connected to; approved servers are health-checked.",
-    "zh": "獲取 MCP 伺服器詳情。未批准的 .mcp.json 伺服器會顯示為 ⏸ 待批准且不會連線；已批准的伺服器會做健康檢查。"
+    "zh": "取得 MCP 伺服器詳情。未批准的 .mcp.json 伺服器會顯示為 ⏸ 待批准且不會連線；已批准的伺服器會做健康檢查。"
   },
   {
     "en": "Remove an MCP server",
@@ -6877,7 +6877,7 @@
   },
   {
     "en": "Configure the Advisor Tool to consult a stronger model for guidance at key moments during a task",
-    "zh": "配置 Advisor Tool，在任務關鍵節點諮詢更強模型獲取建議"
+    "zh": "配置 Advisor Tool，在任務關鍵節點諮詢更強模型取得建議"
   },
   {
     "en": "Send this session to the background and free the terminal",
@@ -7061,7 +7061,7 @@
   },
   {
     "en": "Build and debug apps that use the Claude API",
-    "zh": "構建並除錯使用 Claude API 的應用"
+    "zh": "建置並除錯使用 Claude API 的應用"
   },
   {
     "en": "Let Claude browse and interact with pages in your Chrome",
@@ -7177,7 +7177,7 @@
   },
   {
     "en": "Create a new Cowork plugin from scratch, or customize an installed plugin for a specific organization. Use when: customize plugin, set up plugin, configure plugin, tailor plugin, adjust plugin settings, customize plugin connectors, customize plugin skill, tweak plugin, modify plugin configuration, create a plugin, build a plugin, make a new plugin, develop a plugin, scaffold a plugin.",
-    "zh": "從零建立 Cowork 外掛，或為特定組織定製已安裝外掛。適用於：定製外掛、設定外掛、配置外掛、調整外掛設定、定製外掛 connector、定製外掛 skill、修改外掛配置、建立外掛、構建外掛、開發外掛或生成外掛腳手架。"
+    "zh": "從零建立 Cowork 外掛，或為特定組織客製已安裝外掛。適用於：客製外掛、設定外掛、配置外掛、調整外掛設定、客製外掛 connector、客製外掛 skill、修改外掛配置、建立外掛、建置外掛、開發外掛或生成外掛腳手架。"
   },
   {
     "en": "Push a React design system to claude.ai/design. This runs a converter that bundles the real component code (from Storybook or a bare package) and uploads it. Use when the user runs /design-sync or says \\\"sync my design system to Claude Design\\\".",
@@ -7185,7 +7185,7 @@
   },
   {
     "en": "Reference for the Claude API / Anthropic SDK \\u2014 model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration.",
-    "zh": "Claude API / Anthropic SDK 參考：模型 ID、價格、參數、流式輸出、工具使用、MCP、agents、快取、token 計數和模型遷移。"
+    "zh": "Claude API / Anthropic SDK 參考：模型 ID、價格、參數、串流輸出、工具使用、MCP、agents、快取、token 計數和模型遷移。"
   },
   {
     "en": "Launch and drive this project's app to see a change working. Use when asked to run, start, or screenshot the app, or to confirm a change works in the real app (not just tests). First looks for a project skill that already covers launching the app; otherwise falls back to built-in patterns per project type (CLI, server, TUI, Electron, browser-driven, library).",
@@ -7193,7 +7193,7 @@
   },
   {
     "en": "Author or improve the run-<unit> skill \\u2014 a per-project skill that tells agents how to build, launch, and drive this project's app. Use when the user asks to set up the project, get it running, write run instructions, or verify build/run steps work from a clean environment.",
-    "zh": "編寫或改進 run-<unit> skill：這是一個專案級 skill，用來告訴 Agent 如何構建、啟動並操作此專案的應用。適用於使用者要求設定專案、讓專案跑起來、編寫執行說明，或驗證構建/執行步驟能否在乾淨環境中生效時。"
+    "zh": "編寫或改進 run-<unit> skill：這是一個專案級 skill，用來告訴 Agent 如何建置、啟動並操作此專案的應用。適用於使用者要求設定專案、讓專案跑起來、編寫執行說明，或驗證建置/執行步驟能否在乾淨環境中生效時。"
   },
   {
     "en": "Verify that a code change actually does what it's supposed to by running the app and observing behavior. Use when asked to verify a PR, confirm a fix works, test a change manually, check that a feature works, or validate local changes before pushing.",
