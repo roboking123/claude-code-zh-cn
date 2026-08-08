@@ -549,9 +549,15 @@ const overlay = readJson(overlayFile, null);
 if (!isPlainObject(overlay)) {
   process.exit(0);
 }
+if (Array.isArray(overlay.spinnerVerbs)) {
+  overlay.spinnerVerbs = { mode: "replace", verbs: overlay.spinnerVerbs };
+}
 
 const settings = readJson(settingsFile, {});
 const base = isPlainObject(settings) ? settings : {};
+if (Array.isArray(base.spinnerVerbs)) {
+  base.spinnerVerbs = { mode: "replace", verbs: base.spinnerVerbs };
+}
 const merged = deepMerge(base, overlay);
 
 fs.writeFileSync(settingsFile, JSON.stringify(merged, null, 2) + "\n");
@@ -559,9 +565,9 @@ NODE
         return 0
     fi
 
-    # 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
+# 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
     # 從 plugin 內建的 verbs/tips/settings-overlay 資料現場構建 overlay，
-    # 只補齊 settings 裡確實缺失的 spinner 配置，絕不覆蓋使用者已有的手動配置。
+    # 只補齊缺失配置；廢棄的 spinnerVerbs 陣列僅包裝為當前 schema，不替換使用者動詞。
     local overlay_helper="$PLUGIN_ROOT/scripts/build-overlay.js"
     [ -f "$overlay_helper" ] || return 0
     CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" node "$overlay_helper" ensure-settings "$SETTINGS_FILE" >/dev/null 2>&1 || true

@@ -1,7 +1,7 @@
 {
   "name": "claude-code-zh-cn",
   "displayName": "Claude Code 中文在地化",
-  "version": "2.9.0",
+  "version": "2.10.1",
   "description": "為 Claude Code 提供繁體中文介面、在地化提示和安全的漸進式 CLI patch",
   "author": {
     "name": "taekchef"

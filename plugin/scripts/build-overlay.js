@@ -48,7 +48,10 @@ function buildOverlay(pluginRoot) {
   const tips = readJson(tipsFile, null);
 
   if (Array.isArray(verbs) || (isPlainObject(verbs) && Array.isArray(verbs.verbs))) {
-    base.spinnerVerbs = Array.isArray(verbs) ? verbs : verbs.verbs;
+    base.spinnerVerbs = {
+      mode: isPlainObject(verbs) && verbs.mode === "append" ? "append" : "replace",
+      verbs: Array.isArray(verbs) ? verbs : verbs.verbs,
+    };
   }
 
   if (isPlainObject(tips) && Array.isArray(tips.tips)) {
@@ -61,12 +64,17 @@ function buildOverlay(pluginRoot) {
   return base;
 }
 
-// 只補齊 settings 裡缺失的外掛 key，絕不覆蓋使用者已有的手動配置。
+// 只補齊 settings 裡缺失的外掛 key；舊陣列只包裝為當前 schema，不替換使用者動詞。
 // 返回 { changed, merged }；呼叫方決定是否寫盤。
 function fillMissingKeys(settingsFile, overlay) {
   const settings = isPlainObject(readJson(settingsFile, null)) ? readJson(settingsFile, {}) : {};
   const merged = { ...settings };
   let changed = false;
+
+  if (Array.isArray(settings.spinnerVerbs)) {
+    merged.spinnerVerbs = { mode: "replace", verbs: settings.spinnerVerbs };
+    changed = true;
+  }
 
   for (const key of PLUGIN_KEYS) {
     if (!Object.prototype.hasOwnProperty.call(settings, key) && Object.prototype.hasOwnProperty.call(overlay, key)) {

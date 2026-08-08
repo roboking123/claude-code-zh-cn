@@ -295,19 +295,22 @@ function isObject(value){return value&&typeof value==="object"&&!Array.isArray(v
 function deepMerge(base,override){const result={...base};for(const [key,value] of Object.entries(override)){if(isObject(result[key])&&isObject(value)){result[key]=deepMerge(result[key],value)}else{result[key]=value}}return result}
 const overlay=readJson(overlayFile,null);
 if(!isObject(overlay)) process.exit(0);
+if(Array.isArray(overlay.spinnerVerbs)) overlay.spinnerVerbs={mode:"replace",verbs:overlay.spinnerVerbs};
 const settingsRaw=readJson(settingsFile,{});
 const settings=isObject(settingsRaw)?settingsRaw:{};
+const legacySpinnerVerbs=Array.isArray(settings.spinnerVerbs);
+if(legacySpinnerVerbs) settings.spinnerVerbs={mode:"replace",verbs:settings.spinnerVerbs};
 const merged=deepMerge(settings,overlay);
-const changed=pluginKeys.some((key)=>JSON.stringify(settings[key])!==JSON.stringify(merged[key]));
+const changed=legacySpinnerVerbs||pluginKeys.some((key)=>JSON.stringify(settings[key])!==JSON.stringify(merged[key]));
 if(changed){fs.writeFileSync(settingsFile,JSON.stringify(merged,null,2)+"\n")}
 '@
         Invoke-JsScript -Code $code -Args @($SettingsFile, $SettingsOverlayCacheFile) | Out-Null
         return
     }
 
-    # 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
+# 純 marketplace 安裝：沒有 install 腳本預生成的 cache。
     # 從 plugin 內建的 verbs/tips/settings-overlay 資料現場構建 overlay，
-    # 只補齊 settings 裡確實缺失的 spinner 配置，絕不覆蓋使用者已有的手動配置。
+    # 只補齊缺失配置；廢棄的 spinnerVerbs 陣列僅包裝為當前 schema，不替換使用者動詞。
     $overlayHelper = Join-Path $PluginRoot "scripts\build-overlay.js"
     if (-not (Test-Path $overlayHelper)) { return }
     node $overlayHelper ensure-settings $SettingsFile $PluginRoot 2>$null | Out-Null

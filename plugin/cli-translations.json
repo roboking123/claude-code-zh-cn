@@ -613,7 +613,7 @@
   },
   {
     "en": "Auth token",
-    "zh": "認證權杖"
+    "zh": "認證權杖（Auth token）"
   },
   {
     "en": "Auth: ",
@@ -637,7 +637,7 @@
   },
   {
     "en": "Auto-compact",
-    "zh": "自動壓縮"
+    "zh": "自動壓縮（Auto-compact）"
   },
   {
     "en": "Auto-compact is currently disabled (see /config)",
@@ -3781,7 +3781,7 @@
   },
   {
     "en": "Reduce motion",
-    "zh": "減少動畫"
+    "zh": "減少動畫（Reduce motion）"
   },
   {
     "en": "Referenced PDF",
@@ -4313,7 +4313,7 @@
   },
   {
     "en": "Session ID",
-    "zh": "工作階段 ID"
+    "zh": "工作階段 ID（Session ID）"
   },
   {
     "en": "Session URL",
@@ -4321,7 +4321,7 @@
   },
   {
     "en": "Session name",
-    "zh": "工作階段名稱"
+    "zh": "工作階段名稱（Session name）"
   },
   {
     "en": "Session: ",
@@ -4361,7 +4361,7 @@
   },
   {
     "en": "Setting sources",
-    "zh": "設定來源"
+    "zh": "設定來源（Setting sources）"
   },
   {
     "en": "Setting up launcher and shell integration...",
@@ -4461,7 +4461,7 @@
   },
   {
     "en": "Show tips",
-    "zh": "顯示提示"
+    "zh": "顯示提示（Show tips）"
   },
   {
     "en": "Show turn duration",
