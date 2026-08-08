@@ -1401,7 +1401,7 @@
   },
   {
     "en": "Create Authentication Token",
-    "zh": "建立認證 Token"
+    "zh": "建立認證權杖"
   },
   {
     "en": "Create GitHub Actions workflow",
@@ -4297,7 +4297,7 @@
   },
   {
     "en": "Server does not support token revocation",
-    "zh": "伺服器不支援 token 復原"
+    "zh": "伺服器不支援撤銷權杖"
   },
   {
     "en": "Server is disabled, skipping automatic reconnection",
@@ -6705,7 +6705,7 @@
   },
   {
     "en": "Set up a long-lived authentication token (requires Claude subscription)",
-    "zh": "設定長期身份驗證 token（需要 Claude 訂閱）"
+    "zh": "設定長期認證權杖（需要 Claude 訂閱）"
   },
   {
     "en": "Check for updates and install if available",

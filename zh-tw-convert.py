@@ -79,6 +79,9 @@ FIXES = [
     ("賬號", "帳號"),
     ("賬戶", "帳戶"),
     ("臺", "台"),
+    # 反向救回：「撤銷→復原」是給 undo 用的，token/憑證的 revocation 要維持「撤銷」
+    ("復原權杖", "撤銷權杖"),
+    ("token 復原", "token 撤銷"),
 ]
 
 def convert_text(text: str) -> str:
